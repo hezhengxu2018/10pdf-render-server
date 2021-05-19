@@ -1,0 +1,59 @@
+{
+  "name": "10pdf-render-server",
+  "version": "1.0.0",
+  "description": "a pdf render server",
+  "main": "index.js",
+  "scripts": {
+    "dev:site": "webpack serve -c ./dev/build/webpack.dev.js",
+    "dev:server": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hezhengxu2018/10pdf-render-server.git"
+  },
+  "keywords": [
+    "pdf.js"
+  ],
+  "author": "hezhengxu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hezhengxu2018/10pdf-render-server/issues"
+  },
+  "homepage": "https://github.com/hezhengxu2018/10pdf-render-server#readme",
+  "devDependencies": {
+    "@babel/core": "^7.14.2",
+    "@babel/preset-env": "^7.14.2",
+    "babel-loader": "^8.2.2",
+    "copy-webpack-plugin": "^8.1.1",
+    "css-loader": "^5.2.4",
+    "eslint": "^7.26.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-vue": "^7.9.0",
+    "html-webpack-plugin": "^5.3.1",
+    "lint-staged": "^11.0.0",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.3.0",
+    "style-loader": "^2.0.0",
+    "url-loader": "^4.1.1",
+    "vue-loader": "^15.9.7",
+    "vue-template-compiler": "^2.6.12",
+    "webpack": "^5.37.0",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^3.11.2",
+    "webpackbar": "^5.0.0-3"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "canvas": "^2.7.0",
+    "jsdom": "^16.5.3",
+    "koa": "^2.13.1",
+    "koa-router": "^10.0.0",
+    "koa-static": "^5.0.0",
+    "pdfjs-dist": "^2.7.570",
+    "vue": "^2.6.12",
+    "vue-observe-visibility": "^1.0.0"
+  }
+}
