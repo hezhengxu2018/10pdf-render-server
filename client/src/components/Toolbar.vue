@@ -107,6 +107,7 @@
             class="toolbarButton"
             title="工具"
             tabindex="36"
+            @click="$emit('toggleSecondaryToolbar')"
           >
             <span>工具</span>
           </button>

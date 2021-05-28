@@ -1,7 +1,7 @@
 <template>
   <div id="viewerContainer">
     <div id="viewer" class="pdfViewer" v-if="numPages">
-      <PageView v-for="i in numPages" :key="i" :pageNum=i />
+      <PageView v-for="i in numPages" :key="i" :pageNum="i" @onPageChange="onPageChange"/>
     </div>
   </div>
 </template>
@@ -15,7 +15,12 @@ export default {
     numPages: {
       type: Number,
       default: 0,
-    }
+    },
   },
+  methods: {
+    onPageChange(val) {
+      console.log(val)
+    }
+  }
 };
 </script>

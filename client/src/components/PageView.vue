@@ -1,9 +1,9 @@
 <template>
   <div
     class="spread"
-    :ref="`page-${pageNum}`"
+    :id="`page-${pageNum}`"
     v-if="pageNum"
-    v-observe-visibility="{ callback: visibilityChanged, once: true }"
+    v-observe-visibility="{ callback: visibilityChanged }"
   >
     <div class="page" :aria-label="`第 ${pageNum} 页`">
       <div class="loadingContainer" v-if="isLoading">
@@ -40,12 +40,17 @@ export default {
   methods: {
     visibilityChanged(isVisible) {
       if (isVisible) {
-        const pageWrapper = this.$refs[`page-${this.pageNum}`]
+        const pageWrapper = document.querySelector(`#page-${this.pageNum}`)
         const imgWrapper = pageWrapper.querySelector('.canvasWrapper')
+        if (imgWrapper.querySelector('img')) {
+          this.$emit('onPageChange',this.pageNum)
+          return
+        }
         const imageUrl = `/api/renderPage?filePath=${this.url}&viewport=${this.viewport}&pageNum=${this.pageNum}`
         this.loadImageAsync(imageUrl).then(img => {
           imgWrapper.appendChild(img)
           this.isLoading = false
+          this.$emit('onPageChange',this.pageNum)
         }).catch(()=>{
           this.onError = true
         })

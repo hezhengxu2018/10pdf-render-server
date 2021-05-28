@@ -8,7 +8,7 @@ const {
   renderPDFImage,
   renderPDFTextContent,
   getPDFMetadata,
-} = require("./utils");
+} = require("./pdf_render");
 // const pdfPath = "./static/b85n.pdf";
 const router = new Router({ prefix: "/api" });
 router.get("/renderPage", async (ctx) => {
@@ -29,6 +29,7 @@ router.get("/renderPage", async (ctx) => {
   }
 });
 router.get("/renderText", async (ctx) => {
+  ctx.type = "application/json";
   if (ctx.query.filePath && ctx.query.viewport && ctx.query.pageNum) {
     const viewport = Number(ctx.query.viewport);
     const pageNum = parseInt(ctx.query.pageNum,10);
@@ -38,36 +39,29 @@ router.get("/renderText", async (ctx) => {
         pageNum,
         viewport
       );
-      ctx.type = "application/json";
-      ctx.body = data;
+      ctx.body = { status: 200, data, msg: '' };
     } catch (error) {
-      ctx.type = "html";
-      ctx.body = "error";
+      ctx.body = { status: 404, data:{} , msg: '获取文件失败' };
     }
   } else {
-    ctx.type = "application/json";
-    ctx.body = { data: "参数错误" };
-  }
-});
-router.get("/getMetadata", async (ctx) => {
-  if (ctx.query.filePath) {
-    try {
-      const data = await getPDFMetadata(ctx.query.filePath);
-      ctx.type = "application/json";
-      ctx.body = data;
-    } catch (error) {
-      console.log(error);
-      ctx.type = "html";
-      ctx.body = "error";
-    }
-  } else {
-    ctx.type = "application/json";
-    ctx.body = { data: "参数错误" };
+    ctx.body = { status: 417, data:{} , msg: '请求参数错误' };
   }
 });
 
-// 调用router.routes()来组装匹配好的路由，返回一个合并好的中间件
-// 调用router.allowedMethods()获得一个中间件，当发送了不符合的请求时，会返回 `405 Method Not Allowed` 或 `501 Not Implemented`
+router.get("/getMetadata", async (ctx) => {
+  if (ctx.query.filePath) {
+    ctx.type = "application/json";
+    try {
+      const data = await getPDFMetadata(ctx.query.filePath);
+      ctx.body = { status: 200, data, msg: '' };
+    } catch (error) {
+      ctx.body = { status: 404, data:{} , msg: '获取文件失败' };
+    }
+  } else {
+    ctx.body = { status: 417, data:{} , msg: '请求参数错误' };
+  }
+});
+
 app.use(serve(path.join(__dirname,'/static'),
 	{
   		index:false,       // 默认为true  访问的文件为index.html  可以修改为别的文件名或者false
