@@ -1,5 +1,8 @@
 <template>
-  <div id="secondaryToolbar" :class="`secondaryToolbar doorHangerRight ${isHidden ? 'hidden' : ''}`">
+  <div
+    id="secondaryToolbar"
+    :class="`secondaryToolbar doorHangerRight ${isHidden ? 'hidden' : ''}`"
+  >
     <div id="secondaryToolbarButtonContainer" style="max-height: 489px">
       <button
         id="secondaryPresentationMode"
@@ -177,8 +180,8 @@ export default {
   props: {
     isHidden: {
       type: Boolean,
-      default: true
-    }
-  }
+      default: true,
+    },
+  },
 }
 </script>

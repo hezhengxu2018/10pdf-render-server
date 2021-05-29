@@ -51,7 +51,7 @@
             autocomplete="off"
             :max="numPages"
           />
-          <span id="numPages" class="toolbarLabel">/ {{numPages}}</span>
+          <span id="numPages" class="toolbarLabel">/ {{ numPages }}</span>
         </div>
         <div id="toolbarViewerRight">
           <button
@@ -144,7 +144,7 @@
                 title=""
                 value="auto"
                 selected="selected"
-                >
+              >
                 自动缩放
               </option>
               <option id="pageActualOption" title="" value="page-actual">
@@ -176,7 +176,7 @@
         </div>
       </div>
       <div id="loadingBar" class="hidden">
-        <div class="progress" style="height: 100%; width: 100%;">
+        <div class="progress" style="height: 100%; width: 100%">
           <div class="glimmer"></div>
         </div>
       </div>
@@ -190,8 +190,8 @@ export default {
   props: {
     numPages: {
       type: Number,
-      default: 0
-    }
-  }
+      default: 0,
+    },
+  },
 }
 </script>

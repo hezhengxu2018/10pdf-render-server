@@ -7,11 +7,17 @@
   >
     <div class="page" :aria-label="`第 ${pageNum} 页`">
       <div class="loadingContainer" v-if="isLoading">
-        <img class="loadingSpinner" src="/img/gooey-ring-spinner.svg" v-if="!onError">
-        <p v-else class="onErrorMessage">页面加载失败，<span @click="onRetryClick">点击重试</span></p>
+        <img
+          class="loadingSpinner"
+          src="/img/gooey-ring-spinner.svg"
+          v-if="!onError"
+        />
+        <p v-else class="onErrorMessage">
+          页面加载失败，
+          <span @click="onRetryClick">点击重试</span>
+        </p>
       </div>
-      <div class="canvasWrapper" v-show="!isLoading">
-      </div>
+      <div class="canvasWrapper" v-show="!isLoading"></div>
       <div class="textLayer">
         <div class="endOfContent"></div>
       </div>
@@ -20,11 +26,11 @@
 </template>
 
 <script>
-import { TextLayerBuilder } from "pdfjs-dist/es5/web/pdf_viewer";
-import { getPDFPageText } from "../api/index";
+import { TextLayerBuilder } from 'pdfjs-dist/es5/web/pdf_viewer'
+import { getPDFPageText } from '../api/index'
 
 export default {
-  inject: ["url", "viewport"],
+  inject: ['url', 'viewport'],
   props: {
     pageNum: {
       type: Number,
@@ -34,8 +40,8 @@ export default {
   data() {
     return {
       isLoading: true,
-      onError: false
-    };
+      onError: false,
+    }
   },
   methods: {
     visibilityChanged(isVisible) {
@@ -43,49 +49,54 @@ export default {
         const pageWrapper = document.querySelector(`#page-${this.pageNum}`)
         const imgWrapper = pageWrapper.querySelector('.canvasWrapper')
         if (imgWrapper.querySelector('img')) {
-          this.$emit('onPageChange',this.pageNum)
+          this.$emit('onPageChange', this.pageNum)
           return
         }
         const imageUrl = `/api/renderPage?filePath=${this.url}&viewport=${this.viewport}&pageNum=${this.pageNum}`
-        this.loadImageAsync(imageUrl).then(img => {
-          imgWrapper.appendChild(img)
-          this.isLoading = false
-          this.$emit('onPageChange',this.pageNum)
-        }).catch(()=>{
-          this.onError = true
-        })
-        getPDFPageText(this.url,this.pageNum,this.viewport).then(res=> {
-          const textLayerDiv = pageWrapper.querySelector('.textLayer');
-          textLayerDiv.setAttribute('style', `width: ${res.viewport.width}px; margin: 0 auto;`)
+        this.loadImageAsync(imageUrl)
+          .then((img) => {
+            imgWrapper.appendChild(img)
+            this.isLoading = false
+            this.$emit('onPageChange', this.pageNum)
+          })
+          .catch(() => {
+            this.onError = true
+          })
+        getPDFPageText(this.url, this.pageNum, this.viewport).then((res) => {
+          const textLayerDiv = pageWrapper.querySelector('.textLayer')
+          textLayerDiv.setAttribute(
+            'style',
+            `width: ${res.viewport.width}px; margin: 0 auto;`
+          )
           const textLayer = new TextLayerBuilder({
             textLayerDiv,
             pageIndex: this.pageNum - 1,
-            viewport: res.viewport
-          });
-          textLayer.setTextContent(res.textContent);
-          textLayer.render();
+            viewport: res.viewport,
+          })
+          textLayer.setTextContent(res.textContent)
+          textLayer.render()
         })
       }
     },
     loadImageAsync(src) {
       return new Promise((resolve, reject) => {
-        const image = new Image();
-        image.src = src;
+        const image = new Image()
+        image.src = src
         image.onload = () => {
-          resolve(image);
-        };
+          resolve(image)
+        }
         image.onerror = () => {
-          reject();
-        };
-      });
+          reject()
+        }
+      })
     },
     onRetryClick() {
       this.onError = false
       this.isLoading = true
       this.visibilityChanged(true)
-    }
+    },
   },
-};
+}
 </script>
 
 <style>

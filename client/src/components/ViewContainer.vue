@@ -1,13 +1,18 @@
 <template>
   <div id="viewerContainer">
     <div id="viewer" class="pdfViewer" v-if="numPages">
-      <PageView v-for="i in numPages" :key="i" :pageNum="i" @onPageChange="onPageChange"/>
+      <PageView
+        v-for="i in numPages"
+        :key="i"
+        :pageNum="i"
+        @onPageChange="onPageChange"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import PageView from "./PageView.vue";
+import PageView from './PageView.vue'
 
 export default {
   components: { PageView },
@@ -20,7 +25,7 @@ export default {
   methods: {
     onPageChange(val) {
       console.log(val)
-    }
-  }
-};
+    },
+  },
+}
 </script>

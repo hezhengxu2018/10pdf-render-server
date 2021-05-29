@@ -1,6 +1,6 @@
-const pdfjsLib = require("pdfjs-dist/es5/build/pdf")
-const { createCanvas } = require("canvas")
-const { getPageSizeInches, parsePageSize } = require("./utils")
+const pdfjsLib = require('pdfjs-dist/es5/build/pdf')
+const { createCanvas } = require('canvas')
+const { getPageSizeInches, parsePageSize } = require('./utils')
 
 function renderPDFImage(pdfPath, vp = 1, pageNum = 1) {
   const loadingTask = pdfjsLib.getDocument(pdfPath)
@@ -8,14 +8,14 @@ function renderPDFImage(pdfPath, vp = 1, pageNum = 1) {
     loadingTask.promise.then((doc) => {
       const { numPages } = doc
       if (pageNum > numPages || pageNum < 1) {
-        reject(new Error("输入页面错误"))
+        reject(new Error('输入页面错误'))
       }
       doc
         .getPage(pageNum)
         .then((page) => {
           const viewport = page.getViewport({ scale: vp })
           const canvas = createCanvas(viewport.width, viewport.height)
-          const ctx = canvas.getContext("2d")
+          const ctx = canvas.getContext('2d')
           const renderContext = {
             canvasContext: ctx,
             viewport,
@@ -42,7 +42,7 @@ function renderPDFTextContent(pdfPath, pageNum = 1, vp = 1.5) {
       .then((doc) => {
         const { numPages } = doc
         if (pageNum > numPages || pageNum < 1) {
-          reject(new Error("输入页面错误"))
+          reject(new Error('输入页面错误'))
         }
         doc.getPage(pageNum).then(async (page) => {
           const viewport = page.getViewport({ scale: vp })
@@ -71,8 +71,8 @@ function getPDFMetadata(pdfPath) {
   return new Promise((resolve, reject) => {
     loadingTask.promise.then((doc) => {
       const { numPages } = doc
-      let metaData = ""
-      let info = ""
+      let metaData = ''
+      let info = ''
       doc
         .getMetadata()
         .then((data) => {

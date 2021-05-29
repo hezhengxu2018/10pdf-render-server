@@ -1,0 +1,15 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "plugin:vue/essential",
+    "airbnb-base",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "vue-eslint-parser",
+  "plugins": [
+    "vue"
+  ]
+}
