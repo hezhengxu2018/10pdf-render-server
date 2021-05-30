@@ -44,12 +44,13 @@
             id="pageNumber"
             class="toolbarField pageNumber"
             title="页面"
-            value="1"
             size="4"
             min="1"
             tabindex="15"
             autocomplete="off"
             :max="numPages"
+            :value="curPage"
+            @blur="onCurPageBlur"
           />
           <span id="numPages" class="toolbarLabel">/ {{ numPages }}</span>
         </div>
@@ -191,6 +192,30 @@ export default {
     numPages: {
       type: Number,
       default: 0,
+    },
+  },
+  data() {
+    return {
+      curPage: 1,
+    }
+  },
+  mounted() {
+    this.$EventBus.$on('onPageChange', this.onPageChange)
+  },
+  methods: {
+    onPageChange(curPage) {
+      this.curPage = curPage
+    },
+    onCurPageBlur(e) {
+      if (e.target.value > this.numPages) {
+        this.curPage = this.numPages
+      } else if (e.target.value < 1) {
+        this.curPage = 1
+      } else {
+        this.curPage = parseInt(e.target.value, 10)
+      }
+      const pageDOM = document.querySelector(`#page-${this.curPage}`)
+      this.$EventBus.$emit('toScrollPage', pageDOM.offsetTop)
     },
   },
 }

@@ -3,7 +3,8 @@ import { ObserveVisibility } from 'vue-observe-visibility'
 import App from './App.vue'
 
 Vue.directive('observe-visibility', ObserveVisibility)
+Vue.prototype.$EventBus = new Vue()
 
 new Vue({
-  render: h => h(App),
+  render: (h) => h(App),
 }).$mount('#app')

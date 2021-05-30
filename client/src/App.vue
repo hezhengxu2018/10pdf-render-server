@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       numPages: 0,
-      viewport: 1.5,
+      viewport: 1,
       url: './server/static/b85n.pdf',
       metaData: {},
       isSecondaryToolbarHidden: false,

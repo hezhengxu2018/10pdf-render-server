@@ -16,8 +16,8 @@
   },
   "lint-staged": {
     "*.{js,vue}": [
-        "eslint --fix",
-        "git add"
+      "eslint --fix",
+      "git add"
     ]
   },
   "repository": {
@@ -68,6 +68,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "canvas": "^2.7.0",
+    "eventemitter2": "^6.4.4",
     "jsdom": "^16.5.3",
     "koa": "^2.13.1",
     "koa-router": "^10.0.0",
