@@ -8,6 +8,7 @@
 
 <script>
 import PageView from './PageView.vue'
+import eventsList from '../eventsList'
 
 export default {
   components: { PageView },
@@ -20,7 +21,7 @@ export default {
   mounted() {
     this.lastTime = new Date()
     this.timer = null
-    this.$EventBus.$on('toScrollPage', this.scrollPage)
+    this.$EventBus.$on(eventsList.TO_SCROLL_PAGE, this.scrollPage)
     document
       .querySelector('#viewerContainer')
       .addEventListener('scroll', this.onPageScroll)
@@ -31,9 +32,10 @@ export default {
     },
     onPageScroll() {
       const startTime = new Date()
-      const remaining = 500 - (startTime - this.lastTime)
+      const delay = 200
+      const remaining = delay - (startTime - this.lastTime)
       clearTimeout(this.timer)
-      if (startTime - this.lastTime > 500) {
+      if (startTime - this.lastTime > delay) {
         this.lastTime = startTime
         this.getCurPage()
       } else {
@@ -45,12 +47,17 @@ export default {
     },
     getCurPage() {
       // 获取基础值
-      const base =
+      const base = Math.round(
         (document.querySelector('#viewerContainer').scrollTop -
           document.querySelector(`#page-1`).offsetTop) /
           document.querySelector(`#page-1`).clientHeight +
-        1
-      this.$EventBus.$emit('onPageChange', Math.round(base))
+          1
+      )
+      console.log(
+        document.querySelector('#viewerContainer').scrollTop -
+          document.querySelector(`#page-${base}`).offsetTop
+      )
+      this.$EventBus.$emit(eventsList.ON_PAGE_CHANGE, base)
     },
   },
 }

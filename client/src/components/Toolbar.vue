@@ -186,6 +186,8 @@
 </template>
 
 <script>
+import eventsList from '../eventsList'
+
 export default {
   name: 'toolbar',
   props: {
@@ -200,7 +202,8 @@ export default {
     }
   },
   mounted() {
-    this.$EventBus.$on('onPageChange', this.onPageChange)
+    // register the Subscribe
+    this.$EventBus.$on(eventsList.ON_PAGE_CHANGE, this.onPageChange)
   },
   methods: {
     onPageChange(curPage) {
@@ -215,7 +218,7 @@ export default {
         this.curPage = parseInt(e.target.value, 10)
       }
       const pageDOM = document.querySelector(`#page-${this.curPage}`)
-      this.$EventBus.$emit('toScrollPage', pageDOM.offsetTop)
+      this.$EventBus.$emit(eventsList.TO_SCROLL_PAGE, pageDOM.offsetTop)
     },
   },
 }

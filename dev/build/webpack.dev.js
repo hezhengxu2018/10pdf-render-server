@@ -4,11 +4,13 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const WebpackBarPlugin = require("webpackbar");
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const FriendlyErrorsWebpackPlugin = require('@nuxt/friendly-errors-webpack-plugin');
 module.exports = {
   mode: "development",
   entry: "./client/src/main.js",
   devServer: {
     port: 9000,
+    quiet: true,
     proxy: {
       '/api': {
         target: 'http://localhost:3000/',
@@ -58,6 +60,11 @@ module.exports = {
       patterns: [
         { from: 'client/public' }
       ]
+    }),
+    new FriendlyErrorsWebpackPlugin({
+      compilationSuccessInfo: {
+        messages: ['You application is running here http://localhost:9000']
+      }
     }),
     new webpack.HotModuleReplacementPlugin(),
     new WebpackBarPlugin({
