@@ -1,7 +1,14 @@
 <template>
   <div id="viewerContainer">
-    <div id="viewer" class="pdfViewer" v-if="numPages">
-      <PageView v-for="i in numPages" :key="i" :pageNum="i" />
+    <div id="viewer" class="pdfViewer" v-if="pageSizeList">
+      <PageView
+        v-for="(i, index) in pageSizeList"
+        :key="index"
+        :pageNum="index"
+        :pageSize="i"
+        :url="url"
+        :viewport="viewport"
+      />
     </div>
   </div>
 </template>
@@ -11,11 +18,23 @@ import PageView from './PageView.vue'
 import eventsList from '../eventsList'
 
 export default {
+  name: 'ViewContainer',
   components: { PageView },
   props: {
     numPages: {
       type: Number,
       default: 0,
+    },
+    pageSizeList: {
+      type: Array,
+    },
+    url: {
+      type: String,
+      default: '',
+    },
+    viewport: {
+      type: Number,
+      default: 1,
     },
   },
   mounted() {
@@ -52,10 +71,6 @@ export default {
           document.querySelector(`#page-1`).offsetTop) /
           document.querySelector(`#page-1`).clientHeight +
           1
-      )
-      console.log(
-        document.querySelector('#viewerContainer').scrollTop -
-          document.querySelector(`#page-${base}`).offsetTop
       )
       this.$EventBus.$emit(eventsList.ON_PAGE_CHANGE, base)
     },

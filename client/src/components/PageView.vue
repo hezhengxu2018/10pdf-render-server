@@ -9,7 +9,11 @@
       once: true,
     }"
   >
-    <div class="page" :aria-label="`第 ${pageNum} 页`">
+    <div
+      class="page"
+      :aria-label="`第 ${pageNum} 页`"
+      :style="`height:${pageSize.height}px; width:${pageSize.width}px;`"
+    >
       <div class="loadingContainer" v-if="isLoading">
         <img
           class="loadingSpinner"
@@ -34,11 +38,29 @@ import { TextLayerBuilder } from 'pdfjs-dist/es5/web/pdf_viewer'
 import { getPDFPageText } from '../api/index'
 
 export default {
-  inject: ['url', 'viewport'],
   props: {
     pageNum: {
       type: Number,
       default: 0,
+    },
+    pageSize: {
+      type: Object,
+      default: () => ({ width: 0, height: 0 }),
+    },
+    url: {
+      type: String,
+      default: '',
+    },
+    viewport: {
+      type: Number,
+      default: 1,
+    },
+  },
+  watch: {
+    viewport: {
+      handler() {
+        this.visibilityChanged(true)
+      },
     },
   },
   data() {
@@ -53,6 +75,9 @@ export default {
         const pageWrapper = document.querySelector(`#page-${this.pageNum}`)
         const imgWrapper = pageWrapper.querySelector('.canvasWrapper')
         const imageUrl = `/api/renderPage?filePath=${this.url}&viewport=${this.viewport}&pageNum=${this.pageNum}`
+        if (imgWrapper.querySelector('img')) {
+          console.log('已经有图了')
+        }
         this.loadImageAsync(imageUrl)
           .then((img) => {
             imgWrapper.appendChild(img)

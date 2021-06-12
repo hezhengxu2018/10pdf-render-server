@@ -12,20 +12,13 @@
             <span data-l10n-id="toggle_sidebar_label">切换侧栏</span>
           </button>
           <div class="toolbarButtonSpacer"></div>
-          <button
-            id="viewFind"
-            class="toolbarButton"
-            title="在文档中查找"
-            tabindex="12"
-          >
-            <span data-l10n-id="findbar_label">查找</span>
-          </button>
           <div class="splitToolbarButton hiddenSmallView">
             <button
               class="toolbarButton pageUp"
               title="上一页"
               id="previous"
               tabindex="13"
+              @click="jumpToPage(curPage - 1)"
             >
               <span data-l10n-id="previous_label">上一页</span>
             </button>
@@ -35,6 +28,7 @@
               title="下一页"
               id="next"
               tabindex="14"
+              @click="jumpToPage(curPage + 1)"
             >
               <span data-l10n-id="next_label">下一页</span>
             </button>
@@ -50,21 +44,12 @@
             autocomplete="off"
             :max="numPages"
             :value="curPage"
-            @blur="onCurPageBlur"
+            @blur="jumpToPage($event.target.value)"
+            @keydown.enter="jumpToPage($event.target.value)"
           />
           <span id="numPages" class="toolbarLabel">/ {{ numPages }}</span>
         </div>
         <div id="toolbarViewerRight">
-          <button
-            id="presentationMode"
-            class="toolbarButton presentationMode hiddenLargeView"
-            title="切换到演示模式"
-            tabindex="31"
-            data-l10n-id="presentation_mode"
-          >
-            <span data-l10n-id="presentation_mode_label">演示模式</span>
-          </button>
-
           <button
             id="openFile"
             class="toolbarButton openFile hiddenLargeView"
@@ -91,18 +76,6 @@
           >
             <span data-l10n-id="download_label">下载</span>
           </button>
-          <a
-            href="#page=1&amp;zoom=auto,-338,792"
-            id="viewBookmark"
-            class="toolbarButton bookmark hiddenSmallView"
-            title="当前在看的内容（复制或在新窗口中打开）"
-            tabindex="35"
-          >
-            <span data-l10n-id="bookmark_label">当前在看</span>
-          </a>
-
-          <div class="verticalToolbarSeparator hiddenSmallView"></div>
-
           <button
             id="secondaryToolbarToggle"
             class="toolbarButton"
@@ -120,6 +93,7 @@
               class="toolbarButton zoomOut"
               title="缩小"
               tabindex="21"
+              @click="onViewportChange(undefined, 'decrease')"
             >
               <span data-l10n-id="zoom_out_label">缩小</span>
             </button>
@@ -129,6 +103,7 @@
               class="toolbarButton zoomIn"
               title="放大"
               tabindex="22"
+              @click="onViewportChange(undefined, 'increase')"
             >
               <span data-l10n-id="zoom_in_label">放大</span>
             </button>
@@ -139,18 +114,9 @@
               title="缩放"
               tabindex="23"
               data-l10n-id="zoom"
+              :value="selectedViewport"
+              @input="onViewportChange($event.target.value)"
             >
-              <option
-                id="pageAutoOption"
-                title=""
-                value="auto"
-                selected="selected"
-              >
-                自动缩放
-              </option>
-              <option id="pageActualOption" title="" value="page-actual">
-                实际大小
-              </option>
               <option id="pageFitOption" title="" value="page-fit">
                 适合页面
               </option>
@@ -166,11 +132,13 @@
               ></option>
               <option title="" value="0.5">50%</option>
               <option title="" value="0.75">75%</option>
-              <option title="" value="1">100%</option>
+              <option title="" value="1" selected>100%</option>
               <option title="" value="1.25">125%</option>
               <option title="" value="1.5">150%</option>
               <option title="" value="2">200%</option>
+              <option title="" value="2.5">250%</option>
               <option title="" value="3">300%</option>
+              <option title="" value="3.5">350%</option>
               <option title="" value="4">400%</option>
             </select>
           </span>
@@ -199,6 +167,7 @@ export default {
   data() {
     return {
       curPage: 1,
+      selectedViewport: '1',
     }
   },
   mounted() {
@@ -209,16 +178,40 @@ export default {
     onPageChange(curPage) {
       this.curPage = curPage
     },
-    onCurPageBlur(e) {
-      if (e.target.value > this.numPages) {
+    jumpToPage(value) {
+      if (value > this.numPages) {
         this.curPage = this.numPages
-      } else if (e.target.value < 1) {
+      } else if (value < 1) {
         this.curPage = 1
       } else {
-        this.curPage = parseInt(e.target.value, 10)
+        this.curPage = parseInt(value, 10)
       }
       const pageDOM = document.querySelector(`#page-${this.curPage}`)
       this.$EventBus.$emit(eventsList.TO_SCROLL_PAGE, pageDOM.offsetTop)
+    },
+    onViewportChange(vp, type) {
+      if (!type) {
+        this.selectedViewport = vp
+        this.$emit('scaleChange', vp)
+      }
+
+      if (type === 'increase') {
+        if (this.$parent.viewport + 0.5 <= 4) {
+          this.selectedViewport = String(
+            Math.round((this.$parent.viewport + 0.5) * 2) / 2
+          )
+          this.$emit('scaleChange', Number(this.selectedViewport))
+        }
+      }
+
+      if (type === 'decrease') {
+        if (this.$parent.viewport - 0.5 >= 0.5) {
+          this.selectedViewport = String(
+            Math.round((this.$parent.viewport - 0.5) * 2) / 2
+          )
+          this.$emit('scaleChange', Number(this.selectedViewport))
+        }
+      }
     },
   },
 }

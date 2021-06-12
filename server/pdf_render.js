@@ -1,4 +1,5 @@
 const pdfjsLib = require('pdfjs-dist/es5/build/pdf')
+const range = require('lodash.range')
 const { createCanvas } = require('canvas')
 const { getPageSizeInches, parsePageSize } = require('./utils')
 
@@ -96,6 +97,37 @@ function getPDFMetadata(pdfPath) {
   })
 }
 
+function getPDFPageSize(pdfPath, vp, startPage, endPage) {
+  const loadingTask = pdfjsLib.getDocument(pdfPath)
+  return loadingTask.promise.then((doc) => {
+    const { numPages } = doc
+    let first
+    let last
+    if (startPage === undefined || endPage === undefined) {
+      first = 1
+      last = numPages
+    } else {
+      first = startPage
+      last = endPage
+    }
+    const allPages = range(first, last + 1).map((number) => {
+      return new Promise((resolve, reject) => {
+        doc
+          .getPage(number)
+          .then((page) => {
+            const viewport = page.getViewport({ scale: vp })
+            resolve(viewport)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    })
+    return Promise.all(allPages)
+  })
+}
+
 module.exports.renderPDFImage = renderPDFImage
 module.exports.renderPDFTextContent = renderPDFTextContent
 module.exports.getPDFMetadata = getPDFMetadata
+module.exports.getPDFPageSize = getPDFPageSize

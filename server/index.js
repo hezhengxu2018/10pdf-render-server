@@ -8,9 +8,11 @@ const {
   renderPDFImage,
   renderPDFTextContent,
   getPDFMetadata,
+  getPDFPageSize,
 } = require('./pdf_render')
-// const pdfPath = "./static/b85n.pdf";
+
 const router = new Router({ prefix: '/api' })
+
 router.get('/renderPage', async (ctx) => {
   if (ctx.query.filePath && ctx.query.viewport && ctx.query.pageNum) {
     const viewport = Number(ctx.query.viewport)
@@ -28,6 +30,7 @@ router.get('/renderPage', async (ctx) => {
     ctx.body = { data: '参数错误' }
   }
 })
+
 router.get('/renderText', async (ctx) => {
   ctx.type = 'application/json'
   if (ctx.query.filePath && ctx.query.viewport && ctx.query.pageNum) {
@@ -53,6 +56,20 @@ router.get('/getMetadata', async (ctx) => {
     ctx.type = 'application/json'
     try {
       const data = await getPDFMetadata(ctx.query.filePath)
+      ctx.body = { status: 200, data, msg: '' }
+    } catch (error) {
+      ctx.body = { status: 404, data: {}, msg: '获取文件失败' }
+    }
+  } else {
+    ctx.body = { status: 417, data: {}, msg: '请求参数错误' }
+  }
+})
+
+router.get('/getPDFPageSize', async (ctx) => {
+  if (ctx.query.filePath && ctx.query.viewport) {
+    ctx.type = 'application/json'
+    try {
+      const data = await getPDFPageSize(ctx.query.filePath, ctx.query.viewport)
       ctx.body = { status: 200, data, msg: '' }
     } catch (error) {
       ctx.body = { status: 404, data: {}, msg: '获取文件失败' }
