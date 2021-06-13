@@ -3,7 +3,11 @@
     id="secondaryToolbar"
     :class="`secondaryToolbar doorHangerRight ${isHidden ? 'hidden' : ''}`"
   >
-    <div id="secondaryToolbarButtonContainer" style="max-height: 489px">
+    <div
+      id="secondaryToolbarButtonContainer"
+      style="max-height: 489px"
+      v-clickoutside="hideSecondaryToolbar"
+    >
       <button
         id="secondaryPresentationMode"
         class="secondaryToolbarButton presentationMode visibleLargeView"
@@ -106,61 +110,6 @@
       >
         <span>手形工具</span>
       </button>
-
-      <!-- <div class="horizontalToolbarSeparator"></div>
-
-      <button
-        id="scrollVertical"
-        class="secondaryToolbarButton scrollModeButtons scrollVertical toggled"
-        title="使用垂直滚动"
-        tabindex="62"
-      >
-        <span>垂直滚动</span>
-      </button>
-      <button
-        id="scrollHorizontal"
-        class="secondaryToolbarButton scrollModeButtons scrollHorizontal"
-        title="使用水平滚动"
-        tabindex="63"
-      >
-        <span>水平滚动</span>
-      </button>
-      <button
-        id="scrollWrapped"
-        class="secondaryToolbarButton scrollModeButtons scrollWrapped"
-        title="使用平铺滚动"
-        tabindex="64"
-      >
-        <span>平铺滚动</span>
-      </button>
-
-      <div class="horizontalToolbarSeparator scrollModeButtons"></div>
-
-      <button
-        id="spreadNone"
-        class="secondaryToolbarButton spreadModeButtons spreadNone"
-        title="不加入衔接页"
-        tabindex="65"
-      >
-        <span>单页视图</span>
-      </button>
-      <button
-        id="spreadOdd"
-        class="secondaryToolbarButton spreadModeButtons spreadOdd toggled"
-        title="加入衔接页使奇数页作为起始页"
-        tabindex="66"
-      >
-        <span>双页视图</span>
-      </button>
-      <button
-        id="spreadEven"
-        class="secondaryToolbarButton spreadModeButtons spreadEven"
-        title="加入衔接页使偶数页作为起始页"
-        tabindex="67"
-      >
-        <span>书籍视图</span>
-      </button> -->
-
       <div class="horizontalToolbarSeparator spreadModeButtons"></div>
 
       <button
@@ -168,6 +117,7 @@
         class="secondaryToolbarButton documentProperties"
         title="文档属性…"
         tabindex="68"
+        @click="showDocumentProperties"
       >
         <span>文档属性…</span>
       </button>
@@ -176,11 +126,24 @@
 </template>
 
 <script>
+import clickoutside from '../utils/directive'
+
 export default {
   props: {
     isHidden: {
       type: Boolean,
       default: true,
+    },
+  },
+  directives: {
+    clickoutside,
+  },
+  methods: {
+    hideSecondaryToolbar() {
+      this.$emit('toggleSecondaryToolbar')
+    },
+    showDocumentProperties() {
+      this.$emit('toggleDocumentProperties')
     },
   },
 }

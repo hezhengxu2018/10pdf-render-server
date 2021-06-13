@@ -81,7 +81,7 @@
             class="toolbarButton"
             title="工具"
             tabindex="36"
-            @click="$emit('toggleSecondaryToolbar')"
+            @click="onToggleSecondaryToolbarClick"
           >
             <span>工具</span>
           </button>
@@ -154,8 +154,6 @@
 </template>
 
 <script>
-import eventsList from '../eventsList'
-
 export default {
   name: 'toolbar',
   props: {
@@ -163,31 +161,19 @@ export default {
       type: Number,
       default: 0,
     },
+    curPage: {
+      type: Number,
+      default: 1,
+    },
   },
   data() {
     return {
-      curPage: 1,
       selectedViewport: '1',
     }
   },
-  mounted() {
-    // register the Subscribe
-    this.$EventBus.$on(eventsList.ON_PAGE_CHANGE, this.onPageChange)
-  },
   methods: {
-    onPageChange(curPage) {
-      this.curPage = curPage
-    },
     jumpToPage(value) {
-      if (value > this.numPages) {
-        this.curPage = this.numPages
-      } else if (value < 1) {
-        this.curPage = 1
-      } else {
-        this.curPage = parseInt(value, 10)
-      }
-      const pageDOM = document.querySelector(`#page-${this.curPage}`)
-      this.$EventBus.$emit(eventsList.TO_SCROLL_PAGE, pageDOM.offsetTop)
+      this.$emit('jumpToPage', value)
     },
     onViewportChange(vp, type) {
       if (!type) {
@@ -212,6 +198,9 @@ export default {
           this.$emit('scaleChange', Number(this.selectedViewport))
         }
       }
+    },
+    onToggleSecondaryToolbarClick() {
+      this.$emit('toggleSecondaryToolbar')
     },
   },
 }
