@@ -17,6 +17,7 @@
     ></Toolbar>
     <SecondaryToolbar
       :isHidden="isSecondaryToolbarHidden"
+      @jumpToPage="jumpToPage"
       @toggleSecondaryToolbar="onToggleSecondaryToolbar"
       @toggleDocumentProperties="onToggleDocumentProperties"
     />
@@ -109,9 +110,7 @@ export default {
         this.pageSizeList = res
         this.toggle = true
         this.$nextTick().then(() => {
-          const pageDOM = document.querySelector(
-            `#page-${this.$refs.toolbar.curPage}`
-          )
+          const pageDOM = document.querySelector(`#page-${this.curPage}`)
           this.$EventBus.$emit(eventsList.TO_SCROLL_PAGE, pageDOM.offsetTop)
         })
       })

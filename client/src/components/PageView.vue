@@ -75,9 +75,6 @@ export default {
         const pageWrapper = document.querySelector(`#page-${this.pageNum}`)
         const imgWrapper = pageWrapper.querySelector('.canvasWrapper')
         const imageUrl = `/api/renderPage?filePath=${this.url}&viewport=${this.viewport}&pageNum=${this.pageNum}`
-        if (imgWrapper.querySelector('img')) {
-          console.log('已经有图了')
-        }
         this.loadImageAsync(imageUrl)
           .then((img) => {
             imgWrapper.appendChild(img)

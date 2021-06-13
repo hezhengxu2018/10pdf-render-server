@@ -95,7 +95,7 @@ export default {
   props: {
     metaData: {
       type: Object,
-      default: () => ({ info: {} }),
+      default: () => ({ info: {}, contentLength: 0 }),
     },
     numPages: {
       type: Number,
@@ -103,6 +103,7 @@ export default {
     },
     currentPageSize: {
       type: Object,
+      default: () => ({ viewBox: [] }),
     },
   },
   methods: {

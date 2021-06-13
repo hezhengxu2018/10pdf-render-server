@@ -9,15 +9,6 @@
       v-clickoutside="hideSecondaryToolbar"
     >
       <button
-        id="secondaryPresentationMode"
-        class="secondaryToolbarButton presentationMode visibleLargeView"
-        title="切换到演示模式"
-        tabindex="51"
-      >
-        <span>演示模式</span>
-      </button>
-
-      <button
         id="secondaryOpenFile"
         class="secondaryToolbarButton openFile visibleLargeView"
         title="打开文件"
@@ -44,16 +35,6 @@
         <span>下载</span>
       </button>
 
-      <a
-        href="#page=3&amp;zoom=auto,-15,792"
-        id="secondaryViewBookmark"
-        class="secondaryToolbarButton bookmark visibleSmallView"
-        title="当前在看的内容（复制或在新窗口中打开）"
-        tabindex="55"
-      >
-        <span>当前在看</span>
-      </a>
-
       <div class="horizontalToolbarSeparator visibleLargeView"></div>
 
       <button
@@ -61,6 +42,7 @@
         class="secondaryToolbarButton firstPage"
         title="转到第一页"
         tabindex="56"
+        @click="jumpToPage(1)"
       >
         <span>转到第一页</span>
       </button>
@@ -69,28 +51,10 @@
         class="secondaryToolbarButton lastPage"
         title="转到最后一页"
         tabindex="57"
+        @click="jumpToPage(-1 >>> 0)"
       >
         <span>转到最后一页</span>
       </button>
-
-      <!-- <div class="horizontalToolbarSeparator"></div>
-
-      <button
-        id="pageRotateCw"
-        class="secondaryToolbarButton rotateCw"
-        title="顺时针旋转"
-        tabindex="58"
-      >
-        <span>顺时针旋转</span>
-      </button>
-      <button
-        id="pageRotateCcw"
-        class="secondaryToolbarButton rotateCcw"
-        title="逆时针旋转"
-        tabindex="59"
-      >
-        <span>逆时针旋转</span>
-      </button> -->
 
       <div class="horizontalToolbarSeparator"></div>
 
@@ -144,6 +108,10 @@ export default {
     },
     showDocumentProperties() {
       this.$emit('toggleDocumentProperties')
+    },
+    jumpToPage(val) {
+      this.$emit('jumpToPage', val)
+      this.$emit('toggleSecondaryToolbar')
     },
   },
 }

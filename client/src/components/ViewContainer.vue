@@ -4,7 +4,7 @@
       <PageView
         v-for="(i, index) in pageSizeList"
         :key="index"
-        :pageNum="index"
+        :pageNum="index + 1"
         :pageSize="i"
         :url="url"
         :viewport="viewport"
