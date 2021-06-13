@@ -1,5 +1,5 @@
 <template>
-  <div id="viewerContainer">
+  <div id="viewerContainer" :class="isGrab ? 'grab-to-pan-grab' : ''">
     <div id="viewer" class="pdfViewer" v-if="pageSizeList">
       <PageView
         v-for="(i, index) in pageSizeList"
@@ -35,6 +35,10 @@ export default {
     viewport: {
       type: Number,
       default: 1,
+    },
+    isGrab: {
+      type: Boolean,
+      default: false,
     },
   },
   mounted() {

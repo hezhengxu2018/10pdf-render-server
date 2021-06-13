@@ -17,13 +17,16 @@
     ></Toolbar>
     <SecondaryToolbar
       :isHidden="isSecondaryToolbarHidden"
+      :isGrab="isGrab"
       @jumpToPage="jumpToPage"
       @toggleSecondaryToolbar="onToggleSecondaryToolbar"
       @toggleDocumentProperties="onToggleDocumentProperties"
+      @toggleHandTool="onToggleHandTool"
     />
     <ViewContainer
       :numPages="numPages"
       :pageSizeList="pageSizeList"
+      :isGrab="isGrab"
       :url="url"
       :viewport="viewport"
       v-if="toggle"
@@ -38,6 +41,7 @@ import ViewContainer from './components/ViewContainer.vue'
 import DocumentProperties from './components/DocumentProperties.vue'
 import { getPDFMetadata, getPDFPageSize } from './api/index'
 import eventsList from './eventsList'
+import GrabToPan from './utils/grab_to_pan'
 
 export default {
   name: 'App',
@@ -56,6 +60,7 @@ export default {
       metaData: {},
       isSecondaryToolbarHidden: true,
       isOverlayHidden: true,
+      isGrab: false,
       pageSizeList: [],
       toggle: true,
     }
@@ -112,6 +117,7 @@ export default {
         this.$nextTick().then(() => {
           const pageDOM = document.querySelector(`#page-${this.curPage}`)
           this.$EventBus.$emit(eventsList.TO_SCROLL_PAGE, pageDOM.offsetTop)
+          this.attatchGrabInstance()
         })
       })
     },
@@ -125,6 +131,10 @@ export default {
     onPageChange(value) {
       this.curPage = value
     },
+    onToggleHandTool() {
+      this.isGrab = !this.isGrab
+      this.attatchGrabInstance()
+    },
     jumpToPage(value) {
       if (value > this.numPages) {
         this.curPage = this.numPages
@@ -135,6 +145,16 @@ export default {
       }
       const pageDOM = document.querySelector(`#page-${this.curPage}`)
       this.$EventBus.$emit(eventsList.TO_SCROLL_PAGE, pageDOM.offsetTop)
+    },
+    attatchGrabInstance() {
+      if (this.isGrab) {
+        this.handTool = new GrabToPan({
+          element: document.querySelector('#viewerContainer'),
+        })
+        this.handTool.activate()
+      } else {
+        this.handTool.deactivate()
+      }
     },
   },
 }

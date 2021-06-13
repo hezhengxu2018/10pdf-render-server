@@ -2,53 +2,6 @@
   <div class="toolbar">
     <div id="toolbarContainer">
       <div id="toolbarViewer">
-        <div id="toolbarViewerLeft">
-          <button
-            id="sidebarToggle"
-            class="toolbarButton toggled"
-            title="切换侧栏"
-            tabindex="11"
-          >
-            <span data-l10n-id="toggle_sidebar_label">切换侧栏</span>
-          </button>
-          <div class="toolbarButtonSpacer"></div>
-          <div class="splitToolbarButton hiddenSmallView">
-            <button
-              class="toolbarButton pageUp"
-              title="上一页"
-              id="previous"
-              tabindex="13"
-              @click="jumpToPage(curPage - 1)"
-            >
-              <span data-l10n-id="previous_label">上一页</span>
-            </button>
-            <div class="splitToolbarButtonSeparator"></div>
-            <button
-              class="toolbarButton pageDown"
-              title="下一页"
-              id="next"
-              tabindex="14"
-              @click="jumpToPage(curPage + 1)"
-            >
-              <span data-l10n-id="next_label">下一页</span>
-            </button>
-          </div>
-          <input
-            type="number"
-            id="pageNumber"
-            class="toolbarField pageNumber"
-            title="页面"
-            size="4"
-            min="1"
-            tabindex="15"
-            autocomplete="off"
-            :max="numPages"
-            :value="curPage"
-            @blur="jumpToPage($event.target.value)"
-            @keydown.enter="jumpToPage($event.target.value)"
-          />
-          <span id="numPages" class="toolbarLabel">/ {{ numPages }}</span>
-        </div>
         <div id="toolbarViewerRight">
           <button
             id="openFile"

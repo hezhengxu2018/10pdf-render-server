@@ -60,17 +60,19 @@
 
       <button
         id="cursorSelectTool"
-        class="secondaryToolbarButton selectTool toggled"
+        :class="`secondaryToolbarButton selectTool ${!isGrab ? 'toggled' : ''}`"
         title="启用文本选择工具"
         tabindex="60"
+        @click="toggleHandTool('selectTool')"
       >
         <span>文本选择工具</span>
       </button>
       <button
         id="cursorHandTool"
-        class="secondaryToolbarButton handTool"
+        :class="`secondaryToolbarButton handTool ${isGrab ? 'toggled' : ''}`"
         title="启用手形工具"
         tabindex="61"
+        @click="toggleHandTool('handTool')"
       >
         <span>手形工具</span>
       </button>
@@ -98,6 +100,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    isGrab: {
+      type: Boolean,
+      default: false,
+    },
   },
   directives: {
     clickoutside,
@@ -112,6 +118,16 @@ export default {
     jumpToPage(val) {
       this.$emit('jumpToPage', val)
       this.$emit('toggleSecondaryToolbar')
+    },
+    toggleHandTool(val) {
+      if (this.isGrab && val === 'selectTool') {
+        this.$emit('toggleHandTool')
+        this.$emit('toggleSecondaryToolbar')
+      }
+      if (!this.isGrab && val === 'handTool') {
+        this.$emit('toggleHandTool')
+        this.$emit('toggleSecondaryToolbar')
+      }
     },
   },
 }
