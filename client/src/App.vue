@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="overlayContainer" :class="isOverlayHidden ? 'hidden' : ''">
+    <div id="overlayContainer" v-if="!isDocumentPropertiesHidden">
       <DocumentProperties
         :metaData="metaData"
         :numPages="numPages"
@@ -8,10 +8,18 @@
         @toggleDocumentProperties="onToggleDocumentProperties"
       ></DocumentProperties>
     </div>
+    <div id="overlayContainer" v-if="!isOpenPDFHidden">
+      <OpenPDF
+        :url="url"
+        @toggleOpenPDF="onToggleOpenPDF"
+        @onURLChange="onURLChange"
+      ></OpenPDF>
+    </div>
     <Toolbar
       :numPages="numPages"
       :curPage="curPage"
       @toggleSecondaryToolbar="onToggleSecondaryToolbar"
+      @toggleOpenPDF="onToggleOpenPDF"
       @scaleChange="onScaleChange"
       @jumpToPage="jumpToPage"
     ></Toolbar>
@@ -39,6 +47,7 @@ import Toolbar from './components/Toolbar.vue'
 import SecondaryToolbar from './components/SecondaryToolbar.vue'
 import ViewContainer from './components/ViewContainer.vue'
 import DocumentProperties from './components/DocumentProperties.vue'
+import OpenPDF from './components/OpenPDF.vue'
 import { getPDFMetadata, getPDFPageSize } from './api/index'
 import eventsList from './eventsList'
 import GrabToPan from './utils/grab_to_pan'
@@ -49,6 +58,7 @@ export default {
     Toolbar,
     SecondaryToolbar,
     DocumentProperties,
+    OpenPDF,
     ViewContainer,
   },
   data() {
@@ -59,7 +69,8 @@ export default {
       curPage: 1,
       metaData: {},
       isSecondaryToolbarHidden: true,
-      isOverlayHidden: true,
+      isDocumentPropertiesHidden: true,
+      isOpenPDFHidden: true,
       isGrab: false,
       pageSizeList: [],
       toggle: true,
@@ -117,7 +128,12 @@ export default {
         this.$nextTick().then(() => {
           const pageDOM = document.querySelector(`#page-${this.curPage}`)
           this.$EventBus.$emit(eventsList.TO_SCROLL_PAGE, pageDOM.offsetTop)
-          this.attatchGrabInstance()
+          if (this.isGrab) {
+            this.handTool = new GrabToPan({
+              element: document.querySelector('#viewerContainer'),
+            })
+            this.handTool.activate()
+          }
         })
       })
     },
@@ -125,15 +141,36 @@ export default {
       this.isSecondaryToolbarHidden = !this.isSecondaryToolbarHidden
     },
     onToggleDocumentProperties() {
-      this.isOverlayHidden = !this.isOverlayHidden
+      this.isDocumentPropertiesHidden = !this.isDocumentPropertiesHidden
       this.isSecondaryToolbarHidden = true
+    },
+    onToggleOpenPDF() {
+      this.isOpenPDFHidden = !this.isOpenPDFHidden
     },
     onPageChange(value) {
       this.curPage = value
     },
+    onURLChange(value) {
+      getPDFPageSize(value, this.viewport)
+        .then((res) => {
+          this.pageSizeList = res
+          this.url = value
+          this.onToggleOpenPDF()
+        })
+        .catch(() => {
+          console.log('加载失败')
+        })
+    },
     onToggleHandTool() {
       this.isGrab = !this.isGrab
-      this.attatchGrabInstance()
+      if (this.isGrab) {
+        this.handTool = new GrabToPan({
+          element: document.querySelector('#viewerContainer'),
+        })
+        this.handTool.activate()
+      } else {
+        this.handTool.deactivate()
+      }
     },
     jumpToPage(value) {
       if (value > this.numPages) {
@@ -145,16 +182,6 @@ export default {
       }
       const pageDOM = document.querySelector(`#page-${this.curPage}`)
       this.$EventBus.$emit(eventsList.TO_SCROLL_PAGE, pageDOM.offsetTop)
-    },
-    attatchGrabInstance() {
-      if (this.isGrab) {
-        this.handTool = new GrabToPan({
-          element: document.querySelector('#viewerContainer'),
-        })
-        this.handTool.activate()
-      } else {
-        this.handTool.deactivate()
-      }
     },
   },
 }

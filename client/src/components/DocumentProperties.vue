@@ -79,7 +79,7 @@
         <button
           id="documentPropertiesClose"
           class="overlayButton"
-          @click.capture="onCloseClick"
+          @click.stop="onCloseClick"
         >
           <span>关闭</span>
         </button>

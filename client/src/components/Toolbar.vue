@@ -8,6 +8,7 @@
             class="toolbarButton openFile hiddenLargeView"
             title="打开文件"
             tabindex="32"
+            @click="onOpenPDFClick"
           >
             <span>打开</span>
           </button>
@@ -154,6 +155,9 @@ export default {
     },
     onToggleSecondaryToolbarClick() {
       this.$emit('toggleSecondaryToolbar')
+    },
+    onOpenPDFClick() {
+      this.$emit('toggleOpenPDF')
     },
   },
 }
