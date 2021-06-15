@@ -7,7 +7,9 @@
     <div class="dialog">
       <div class="row">
         <span data-l10n-id="document_properties_file_name">文件名:</span>
-        <p id="fileNameField">compressed.tracemonkey-pldi-09.pdf</p>
+        <p id="fileNameField">
+          {{ getFilename('./server/static/b85n.pdf') }}
+        </p>
       </div>
       <div class="row">
         <span data-l10n-id="document_properties_file_size">文件大小:</span>
@@ -89,7 +91,7 @@
 </template>
 
 <script>
-import { PDFDateString } from 'pdfjs-dist/lib/pdf'
+import { PDFDateString } from 'pdfjs-dist'
 
 export default {
   props: {
@@ -122,6 +124,16 @@ export default {
         return `${(value / 1024 / 1024).toFixed(2)} MB`
       }
       return `${(value / 1024).toFixed(2)} KB`
+    },
+    getFilename(url) {
+      const reURI = /^(?:(?:[^:]+:)?\/\/[^/]+)?([^?#]*)(\?[^#]*)?(#.*)?$/
+      const reFilename = /[^/?#=]+\.pdf\b(?!.*\.pdf\b)/i
+      const splitURI = reURI.exec(url)
+      const suggestedFilename =
+        reFilename.exec(splitURI[1]) ||
+        reFilename.exec(splitURI[2]) ||
+        reFilename.exec(splitURI[3])
+      return suggestedFilename[0]
     },
     onCloseClick() {
       this.$emit('toggleDocumentProperties')
