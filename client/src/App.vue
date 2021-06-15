@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Toolbar from './components/Toolbar.vue'
 import SecondaryToolbar from './components/SecondaryToolbar.vue'
 import ViewContainer from './components/ViewContainer.vue'
@@ -139,7 +140,15 @@ export default {
         })
       })
     },
-    onDownloadClick() {},
+    onDownloadClick() {
+      const reg = /^(https|http|ftp|rtsp|mms)?:\/\//
+      if (reg.test(this.url)) {
+        alert('暂不支持跨域资源')
+      }
+      axios.get(this.url, {
+        headers: { 'Content-disposition': 'attachment' },
+      })
+    },
     onToggleSecondaryToolbar() {
       this.isSecondaryToolbarHidden = !this.isSecondaryToolbarHidden
     },
@@ -162,7 +171,7 @@ export default {
           this.onScaleChange()
         })
         .catch(() => {
-          console.log('加载失败')
+          alert('加载失败')
         })
     },
     onToggleHandTool() {

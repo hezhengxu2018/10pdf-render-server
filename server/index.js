@@ -12,7 +12,7 @@ const {
 } = require('./pdf_render')
 
 const router = new Router({ prefix: '/api' })
-
+const port = 3000
 router.get('/renderPage', async (ctx) => {
   if (ctx.query.filePath && ctx.query.viewport && ctx.query.pageNum) {
     const viewport = Number(ctx.query.viewport)
@@ -79,13 +79,7 @@ router.get('/getPDFPageSize', async (ctx) => {
   }
 })
 
-app.use(
-  serve(path.join(__dirname, '/static'), {
-    index: false, // 默认为true  访问的文件为index.html  可以修改为别的文件名或者false
-    hidden: false, // 是否同意传输隐藏文件
-    defer: true, // 如果为true，则在返回next()之后进行服务，从而允许后续中间件先进行响应
-  })
-)
+app.use(serve(path.join(__dirname, '/static')))
 app.use(router.routes())
 app.use(
   router.allowedMethods({
@@ -95,4 +89,5 @@ app.use(
   })
 )
 
-app.listen(3000)
+console.log(`You application is running here http://localhost:${port}`)
+app.listen(port)
