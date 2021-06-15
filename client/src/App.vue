@@ -4,6 +4,7 @@
       <DocumentProperties
         :metaData="metaData"
         :numPages="numPages"
+        :url="url"
         :currentPageSize="currentPageSize"
         @toggleDocumentProperties="onToggleDocumentProperties"
       ></DocumentProperties>
@@ -22,6 +23,7 @@
       @toggleOpenPDF="onToggleOpenPDF"
       @scaleChange="onScaleChange"
       @jumpToPage="jumpToPage"
+      @download="onDownloadClick"
     ></Toolbar>
     <SecondaryToolbar
       :isHidden="isSecondaryToolbarHidden"
@@ -65,7 +67,7 @@ export default {
     return {
       numPages: 0,
       viewport: 1,
-      url: './server/static/b85n.pdf',
+      url: 'b85n.pdf',
       curPage: 1,
       metaData: {},
       isSecondaryToolbarHidden: true,
@@ -137,6 +139,7 @@ export default {
         })
       })
     },
+    onDownloadClick() {},
     onToggleSecondaryToolbar() {
       this.isSecondaryToolbarHidden = !this.isSecondaryToolbarHidden
     },
@@ -156,6 +159,7 @@ export default {
           this.pageSizeList = res
           this.url = value
           this.onToggleOpenPDF()
+          this.onScaleChange()
         })
         .catch(() => {
           console.log('加载失败')

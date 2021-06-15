@@ -8,7 +8,7 @@
       <div class="row">
         <span data-l10n-id="document_properties_file_name">文件名:</span>
         <p id="fileNameField">
-          {{ getFilename('./server/static/b85n.pdf') }}
+          {{ getFilename(this.url) }}
         </p>
       </div>
       <div class="row">
@@ -102,6 +102,10 @@ export default {
     numPages: {
       type: Number,
       default: 0,
+    },
+    url: {
+      type: String,
+      default: '',
     },
     currentPageSize: {
       type: Object,

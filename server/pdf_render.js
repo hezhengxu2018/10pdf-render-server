@@ -1,9 +1,31 @@
 const pdfjsLib = require('pdfjs-dist/es5/build/pdf')
+const fs = require('fs').promises
+const path = require('path')
+const url = require('url')
 const range = require('lodash.range')
 const { createCanvas } = require('canvas')
 const { getPageSizeInches, parsePageSize } = require('./utils')
 
-function renderPDFImage(pdfPath, vp = 1, pageNum = 1) {
+function getFilePath(file) {
+  if (url.parse(file).protocol !== null) {
+    return Promise.resolve(file)
+  }
+  const filePath = path.join(__dirname, '/static', file)
+  return fs
+    .stat(filePath)
+    .then(() => {
+      return filePath
+    })
+    .catch((err) => {
+      if (err.code === 'ENOENT') {
+        return new Error('file does not exist')
+      }
+      return new Error(err.code)
+    })
+}
+
+async function renderPDFImage(file, vp = 1, pageNum = 1) {
+  const pdfPath = await getFilePath(file)
   const loadingTask = pdfjsLib.getDocument(pdfPath)
   return new Promise((resolve, reject) => {
     loadingTask.promise.then((doc) => {
@@ -36,7 +58,8 @@ function renderPDFImage(pdfPath, vp = 1, pageNum = 1) {
   })
 }
 
-function renderPDFTextContent(pdfPath, pageNum = 1, vp = 1.5) {
+async function renderPDFTextContent(file, pageNum = 1, vp = 1.5) {
+  const pdfPath = await getFilePath(file)
   const loadingTask = pdfjsLib.getDocument(pdfPath)
   return new Promise((resolve, reject) => {
     loadingTask.promise
@@ -67,7 +90,8 @@ function renderPDFTextContent(pdfPath, pageNum = 1, vp = 1.5) {
   })
 }
 
-function getPDFMetadata(pdfPath) {
+async function getPDFMetadata(file) {
+  const pdfPath = await getFilePath(file)
   const loadingTask = pdfjsLib.getDocument(pdfPath)
   return new Promise((resolve, reject) => {
     loadingTask.promise.then((doc) => {
@@ -97,7 +121,8 @@ function getPDFMetadata(pdfPath) {
   })
 }
 
-function getPDFPageSize(pdfPath, vp, startPage, endPage) {
+async function getPDFPageSize(file, vp, startPage, endPage) {
+  const pdfPath = await getFilePath(file)
   const loadingTask = pdfjsLib.getDocument(pdfPath)
   return loadingTask.promise.then((doc) => {
     const { numPages } = doc

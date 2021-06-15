@@ -14,19 +14,11 @@
           </button>
 
           <button
-            id="print"
-            class="toolbarButton print hiddenMediumView"
-            title="打印"
-            tabindex="33"
-          >
-            <span data-l10n-id="print_label">打印</span>
-          </button>
-
-          <button
             id="download"
             class="toolbarButton download hiddenMediumView"
             title="下载"
             tabindex="34"
+            @click.stop="onDownloadClick"
           >
             <span data-l10n-id="download_label">下载</span>
           </button>
@@ -35,7 +27,7 @@
             class="toolbarButton"
             title="工具"
             tabindex="36"
-            @click="onToggleSecondaryToolbarClick"
+            @click.stop="onToggleSecondaryToolbarClick"
           >
             <span>工具</span>
           </button>
@@ -158,6 +150,9 @@ export default {
     },
     onOpenPDFClick() {
       this.$emit('toggleOpenPDF')
+    },
+    onDownloadClick() {
+      this.$emit('download')
     },
   },
 }

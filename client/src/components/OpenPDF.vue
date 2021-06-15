@@ -7,7 +7,11 @@
     <div class="dialog">
       <div>
         <label for="pdfurl">PDF文件地址:</label>
-        <input id="pdfurl" :value="url" />
+        <input
+          id="pdfurl"
+          :value="url"
+          style="color: var(--main-color); font-size: 14px"
+        />
       </div>
       <div class="buttonRow">
         <button class="overlayButton" @click.stop="onSubmitClick">
