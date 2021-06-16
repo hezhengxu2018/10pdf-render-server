@@ -10,7 +10,7 @@
         <input
           id="pdfurl"
           :value="url"
-          style="color: var(--main-color); font-size: 14px"
+          style="font-size: 14px"
         />
       </div>
       <div class="buttonRow">
