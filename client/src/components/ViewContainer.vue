@@ -44,7 +44,7 @@ export default {
   mounted() {
     this.lastTime = new Date()
     this.timer = null
-    this.$EventBus.$on(eventsList.TO_SCROLL_PAGE, this.scrollPage)
+    this.$EventBus.$on(eventsList.SCROLL_PAGE_TO, this.scrollPage)
     document
       .querySelector('#viewerContainer')
       .addEventListener('scroll', this.onPageScroll)
@@ -54,19 +54,13 @@ export default {
       document.querySelector('#viewerContainer').scrollTo(0, distance)
     },
     onPageScroll() {
-      const startTime = new Date()
-      const delay = 200
-      const remaining = delay - (startTime - this.lastTime)
-      clearTimeout(this.timer)
-      if (startTime - this.lastTime > delay) {
-        this.lastTime = startTime
-        this.getCurPage()
-      } else {
-        // 最后一次也执行
-        this.timer = setTimeout(() => {
-          this.getCurPage()
-        }, remaining)
+      // debonce
+      if (this.timer) {
+        clearTimeout(this.timer)
       }
+      this.timer = setTimeout(() => {
+        this.getCurPage()
+      }, 20)
     },
     getCurPage() {
       // 获取基础值

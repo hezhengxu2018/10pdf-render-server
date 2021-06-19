@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="isSidebarHidden ? '' : 'sidebarOpen'">
     <div id="overlayContainer" v-if="!isDocumentPropertiesHidden">
       <DocumentProperties
         :metaData="metaData"
@@ -19,16 +19,17 @@
     <Toolbar
       :numPages="numPages"
       :curPage="curPage"
+      :isSidebarHidden="isSidebarHidden"
       @toggleSecondaryToolbar="onToggleSecondaryToolbar"
       @toggleOpenPDF="onToggleOpenPDF"
+      @toggleSidebar="onToggleSidebar"
       @scaleChange="onScaleChange"
-      @jumpToPage="jumpToPage"
       @download="onDownloadClick"
     ></Toolbar>
+    <Sidebar :numPages="numPages" :curPage="curPage" :url="url" />
     <SecondaryToolbar
       :isHidden="isSecondaryToolbarHidden"
       :isGrab="isGrab"
-      @jumpToPage="jumpToPage"
       @toggleSecondaryToolbar="onToggleSecondaryToolbar"
       @toggleDocumentProperties="onToggleDocumentProperties"
       @toggleHandTool="onToggleHandTool"
@@ -51,6 +52,7 @@ import SecondaryToolbar from './components/SecondaryToolbar.vue'
 import ViewContainer from './components/ViewContainer.vue'
 import DocumentProperties from './components/DocumentProperties.vue'
 import OpenPDF from './components/OpenPDF.vue'
+import Sidebar from './components/Sidebar.vue'
 import { getPDFMetadata, getPDFPageSize } from './api/index'
 import eventsList from './eventsList'
 import GrabToPan from './utils/grab_to_pan'
@@ -59,6 +61,7 @@ export default {
   name: 'App',
   components: {
     Toolbar,
+    Sidebar,
     SecondaryToolbar,
     DocumentProperties,
     OpenPDF,
@@ -74,6 +77,7 @@ export default {
       isSecondaryToolbarHidden: true,
       isDocumentPropertiesHidden: true,
       isOpenPDFHidden: true,
+      isSidebarHidden: true,
       isGrab: false,
       pageSizeList: [],
       toggle: true,
@@ -87,6 +91,7 @@ export default {
   mounted() {
     // register the Subscribe
     this.$EventBus.$on(eventsList.ON_PAGE_CHANGE, this.onPageChange)
+    this.$EventBus.$on(eventsList.JUMP_PAGE_TO, this.jumpToPage)
     getPDFMetadata(this.url, this.viewport).then((res) => {
       const { numPages } = res
       this.metaData = res
@@ -130,7 +135,7 @@ export default {
         this.toggle = true
         this.$nextTick().then(() => {
           const pageDOM = document.querySelector(`#page-${this.curPage}`)
-          this.$EventBus.$emit(eventsList.TO_SCROLL_PAGE, pageDOM.offsetTop)
+          this.$EventBus.$emit(eventsList.SCROLL_PAGE_TO, pageDOM.offsetTop)
           if (this.isGrab) {
             this.handTool = new GrabToPan({
               element: document.querySelector('#viewerContainer'),
@@ -185,6 +190,18 @@ export default {
         this.handTool.deactivate()
       }
     },
+    onToggleSidebar() {
+      this.isSidebarHidden = !this.isSidebarHidden
+      if (!this.isSidebarHidden) {
+        const thumbnailWrapper = document.querySelector(
+          `#thumbnail-${this.curPage}`
+        ).parentElement
+        const thumbnailReservedHeight = 200
+        const scrollDistance =
+          thumbnailWrapper.scrollHeight - thumbnailReservedHeight
+        document.querySelector('#thumbnailView').scrollTo(0, scrollDistance)
+      }
+    },
     jumpToPage(value) {
       if (value > this.numPages) {
         this.curPage = this.numPages
@@ -194,7 +211,7 @@ export default {
         this.curPage = parseInt(value, 10)
       }
       const pageDOM = document.querySelector(`#page-${this.curPage}`)
-      this.$EventBus.$emit(eventsList.TO_SCROLL_PAGE, pageDOM.offsetTop)
+      this.$EventBus.$emit(eventsList.SCROLL_PAGE_TO, pageDOM.offsetTop)
     },
   },
 }

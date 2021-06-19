@@ -2,7 +2,16 @@
   <div class="toolbar">
     <div id="toolbarContainer">
       <div id="toolbarViewer">
-         <div id="toolbarViewerLeft">
+        <div id="toolbarViewerLeft">
+          <button
+            id="sidebarToggle"
+            :class="`toolbarButton ${isSidebarHidden ? '' : 'toggled'}`"
+            title="切换侧栏"
+            tabindex="11"
+            @click="onToggleSidebarClick"
+          >
+            <span data-l10n-id="toggle_sidebar_label">切换侧栏</span>
+          </button>
           <div class="toolbarButtonSpacer"></div>
           <div class="splitToolbarButton hiddenSmallView">
             <button
@@ -139,6 +148,8 @@
 </template>
 
 <script>
+import eventsList from '../eventsList'
+
 export default {
   name: 'toolbar',
   props: {
@@ -150,6 +161,10 @@ export default {
       type: Number,
       default: 1,
     },
+    isSidebarHidden: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -158,7 +173,7 @@ export default {
   },
   methods: {
     jumpToPage(value) {
-      this.$emit('jumpToPage', value)
+      this.$EventBus.$emit(eventsList.JUMP_PAGE_TO, value)
     },
     onViewportChange(vp, type) {
       if (!type) {
@@ -192,6 +207,9 @@ export default {
     },
     onDownloadClick() {
       this.$emit('download')
+    },
+    onToggleSidebarClick() {
+      this.$emit('toggleSidebar')
     },
   },
 }

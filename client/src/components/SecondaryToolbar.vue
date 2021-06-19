@@ -93,6 +93,7 @@
 
 <script>
 import clickoutside from '../utils/directive'
+import eventsList from '../eventsList'
 
 export default {
   props: {
@@ -116,7 +117,7 @@ export default {
       this.$emit('toggleDocumentProperties')
     },
     jumpToPage(val) {
-      this.$emit('jumpToPage', val)
+      this.$EventBus.$emit(eventsList.JUMP_PAGE_TO, val)
       this.$emit('toggleSecondaryToolbar')
     },
     toggleHandTool(val) {
