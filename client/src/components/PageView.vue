@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { TextLayerBuilder } from 'pdfjs-dist/es5/web/pdf_viewer'
+import { TextLayerBuilder, EventBus } from 'pdfjs-dist/es5/web/pdf_viewer'
 import { getPDFPageText } from '../api/index'
 
 export default {
@@ -89,10 +89,12 @@ export default {
             'style',
             `width: ${res.viewport.width}px; margin: 0 auto;`
           )
+          const eventBus = new EventBus()
           const textLayer = new TextLayerBuilder({
             textLayerDiv,
             pageIndex: this.pageNum - 1,
             viewport: res.viewport,
+            eventBus,
           })
           textLayer.setTextContent(res.textContent)
           textLayer.render()

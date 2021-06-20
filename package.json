@@ -9,7 +9,8 @@
     "dev:server": "nodemon server",
     "build": "webpack -c ./dev/build/webpack.prod.js",
     "commit": "git-cz",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "release": "release-it"
   },
   "config": {
     "commitizen": {
@@ -59,6 +60,8 @@
     "lint-staged": "^11.0.0",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.0",
+    "release-it": "^14.9.0",
+    "source-map-loader": "^3.0.0",
     "style-loader": "^2.0.0",
     "url-loader": "^4.1.1",
     "vue": "^2.6.12",
@@ -78,5 +81,10 @@
     "koa-static": "^5.0.0",
     "lodash.range": "^3.2.0",
     "pdfjs-dist": "^2.7.570"
+  },
+  "release-it": {
+    "github": {
+      "release": true
+    }
   }
 }
