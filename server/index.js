@@ -2,6 +2,8 @@ const Koa = require('koa')
 const Router = require('koa-router')
 const serve = require('koa-static')
 const path = require('path')
+const fs = require('fs')
+const url = require('url')
 
 const app = new Koa()
 const {
@@ -74,6 +76,39 @@ router.get('/getPDFPageSize', async (ctx) => {
     } catch (error) {
       ctx.body = { status: 404, data: {}, msg: '获取文件失败' }
     }
+  } else {
+    ctx.body = { status: 417, data: {}, msg: '请求参数错误' }
+  }
+})
+
+router.get('/download', async (ctx) => {
+  if (ctx.query.filePath) {
+    const reURI = /^(?:(?:[^:]+:)?\/\/[^/]+)?([^?#]*)(\?[^#]*)?(#.*)?$/
+    const reFilename = /[^/?#=]+\.pdf\b(?!.*\.pdf\b)/i
+    const splitURI = reURI.exec(ctx.query.filePath)
+    const suggestedFilename =
+      reFilename.exec(splitURI[1]) ||
+      reFilename.exec(splitURI[2]) ||
+      reFilename.exec(splitURI[3])
+    const fileName = suggestedFilename[0]
+    let filePath
+    if (url.parse(ctx.query.filePath).protocol === null) {
+      filePath = path.join(__dirname, '/static', ctx.query.filePath)
+    } else {
+      filePath = ctx.query.filePath
+      ctx.body = { status: 404, data: {}, msg: '暂只支持本地文件' }
+    }
+    ctx.set({
+      'Content-Disposition': `attachment; filename=${fileName}`,
+      'content-type': 'application/octet-stream',
+    })
+    try {
+      await fs.promises.stat(filePath)
+    } catch (error) {
+      ctx.body = { status: 404, data: {}, msg: '文件不存在' }
+    }
+
+    ctx.body = fs.createReadStream(filePath)
   } else {
     ctx.body = { status: 417, data: {}, msg: '请求参数错误' }
   }

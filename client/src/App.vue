@@ -46,7 +46,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import FileSaver from 'file-saver'
 import Toolbar from './components/Toolbar.vue'
 import SecondaryToolbar from './components/SecondaryToolbar.vue'
 import ViewContainer from './components/ViewContainer.vue'
@@ -150,9 +151,7 @@ export default {
       if (reg.test(this.url)) {
         alert('暂不支持跨域资源')
       }
-      axios.get(this.url, {
-        headers: { 'Content-disposition': 'attachment' },
-      })
+      FileSaver.saveAs(`/api/download?filePath=${this.url}`)
     },
     onToggleSecondaryToolbar() {
       this.isSecondaryToolbarHidden = !this.isSecondaryToolbarHidden
