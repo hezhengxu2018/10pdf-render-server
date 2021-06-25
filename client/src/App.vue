@@ -42,6 +42,7 @@
       :viewport="viewport"
       v-if="toggle"
     ></ViewContainer>
+    <div id="errorMessage"></div>
   </div>
 </template>
 
@@ -149,7 +150,7 @@ export default {
     onDownloadClick() {
       const reg = /^(https|http|ftp|rtsp|mms)?:\/\//
       if (reg.test(this.url)) {
-        alert('暂不支持跨域资源')
+        this.$errorMessage('暂不支持跨域资源')
       }
       FileSaver.saveAs(`/api/download?filePath=${this.url}`)
     },
@@ -175,7 +176,7 @@ export default {
           this.onScaleChange()
         })
         .catch(() => {
-          alert('加载失败')
+          this.$errorMessage('资源加载失败')
         })
     },
     onToggleHandTool() {
