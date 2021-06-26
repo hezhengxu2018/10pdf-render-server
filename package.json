@@ -4,7 +4,7 @@
   "description": "a pdf render server",
   "main": "index.js",
   "scripts": {
-    "start": "node ./server/index.js",
+    "start": "npm run build && node ./server/index.js",
     "dev:site": "webpack serve -c ./dev/build/webpack.dev.js",
     "dev:server": "nodemon server",
     "build": "webpack -c ./dev/build/webpack.prod.js",

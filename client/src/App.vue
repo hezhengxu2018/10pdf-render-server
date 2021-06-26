@@ -25,7 +25,7 @@
       @toggleSidebar="onToggleSidebar"
       @scaleChange="onScaleChange"
       @download="onDownloadClick"
-    ></Toolbar>
+    />
     <Sidebar :numPages="numPages" :curPage="curPage" :url="url" />
     <SecondaryToolbar
       :isHidden="isSecondaryToolbarHidden"
@@ -41,7 +41,7 @@
       :url="url"
       :viewport="viewport"
       v-if="toggle"
-    ></ViewContainer>
+    />
     <div id="errorMessage"></div>
   </div>
 </template>
@@ -49,12 +49,14 @@
 <script>
 // eslint-disable-next-line import/no-extraneous-dependencies
 import FileSaver from 'file-saver'
-import Toolbar from './components/Toolbar.vue'
-import SecondaryToolbar from './components/SecondaryToolbar.vue'
-import ViewContainer from './components/ViewContainer.vue'
-import DocumentProperties from './components/DocumentProperties.vue'
-import OpenPDF from './components/OpenPDF.vue'
-import Sidebar from './components/Sidebar.vue'
+import {
+  Toolbar,
+  SecondaryToolbar,
+  ViewContainer,
+  DocumentProperties,
+  OpenPDF,
+  Sidebar,
+} from './components/index'
 import { getPDFMetadata, getPDFPageSize } from './api/index'
 import eventsList from './eventsList'
 import GrabToPan from './utils/grab_to_pan'
@@ -147,6 +149,29 @@ export default {
         })
       })
     },
+    onPageChange(value) {
+      this.curPage = value
+    },
+    onURLChange(value) {
+      getPDFPageSize(value, this.viewport)
+        .then((res) => {
+          // if pdf file is exists, to set numPages to zero make sure thumbnails rerender
+          this.numPages = 0
+          this.pageSizeList = res
+          // change the url only when pdf file exists
+          this.url = value
+          getPDFMetadata(this.url, this.viewport).then((result) => {
+            const { numPages } = result
+            this.metaData = result
+            this.numPages = Number(numPages)
+          })
+          this.onToggleOpenPDF()
+          this.onScaleChange()
+        })
+        .catch(() => {
+          this.$errorMessage('资源加载失败')
+        })
+    },
     onDownloadClick() {
       const reg = /^(https|http|ftp|rtsp|mms)?:\/\//
       if (reg.test(this.url)) {
@@ -163,21 +188,6 @@ export default {
     },
     onToggleOpenPDF() {
       this.isOpenPDFHidden = !this.isOpenPDFHidden
-    },
-    onPageChange(value) {
-      this.curPage = value
-    },
-    onURLChange(value) {
-      getPDFPageSize(value, this.viewport)
-        .then((res) => {
-          this.pageSizeList = res
-          this.url = value
-          this.onToggleOpenPDF()
-          this.onScaleChange()
-        })
-        .catch(() => {
-          this.$errorMessage('资源加载失败')
-        })
     },
     onToggleHandTool() {
       this.isGrab = !this.isGrab

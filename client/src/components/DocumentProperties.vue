@@ -1,9 +1,5 @@
 <template>
-  <div
-    id="documentPropertiesOverlay"
-    class="container"
-    @click.prevent="onClickOutside"
-  >
+  <div id="documentPropertiesOverlay" class="container">
     <div class="dialog">
       <div class="row">
         <span data-l10n-id="document_properties_file_name">文件名:</span>
@@ -141,12 +137,6 @@ export default {
     },
     onCloseClick() {
       this.$emit('toggleDocumentProperties')
-    },
-    onClickOutside(e) {
-      const dialog = document.querySelector('.dialog')
-      if (!dialog.contains(e.target)) {
-        this.$emit('toggleDocumentProperties')
-      }
     },
   },
 }
