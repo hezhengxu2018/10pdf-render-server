@@ -21,7 +21,9 @@
         <span data-l10n-id="document_properties_creation_date">创建日期:</span>
         <p id="creationDateField">
           {{
-            metaData.info ? dateFormatter(this.metaData.info.CreationDate) : '-'
+            metaData.info && metaData.info.CreationDate
+              ? dateFormatter(this.metaData.info.CreationDate)
+              : '-'
           }}
         </p>
       </div>
@@ -30,7 +32,11 @@
           修改日期:
         </span>
         <p id="modificationDateField">
-          {{ metaData.info ? dateFormatter(this.metaData.info.ModDate) : '-' }}
+          {{
+            metaData.info && metaData.info.ModDate
+              ? dateFormatter(this.metaData.info.ModDate)
+              : '-'
+          }}
         </p>
       </div>
       <div class="row">
@@ -110,6 +116,7 @@ export default {
   },
   methods: {
     dateFormatter(date) {
+      console.log(date)
       if (this.metaData.info) {
         return `${PDFDateString.toDateObject(
           date

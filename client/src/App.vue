@@ -75,7 +75,7 @@ export default {
     return {
       numPages: 0,
       viewport: 1,
-      url: 'b85n.pdf',
+      url: 'http://www.cpic.com.cn/pdfjs/web/compressed.tracemonkey-pldi-09.pdf',
       curPage: 1,
       metaData: {},
       isSecondaryToolbarHidden: true,
@@ -96,14 +96,22 @@ export default {
     // register the Subscribe
     this.$EventBus.$on(eventsList.ON_PAGE_CHANGE, this.onPageChange)
     this.$EventBus.$on(eventsList.JUMP_PAGE_TO, this.jumpToPage)
-    getPDFMetadata(this.url, this.viewport).then((res) => {
-      const { numPages } = res
-      this.metaData = res
-      this.numPages = Number(numPages)
-    })
-    getPDFPageSize(this.url, this.viewport).then((res) => {
-      this.pageSizeList = res
-    })
+    getPDFMetadata(this.url, this.viewport)
+      .then((res) => {
+        const { numPages } = res
+        this.metaData = res
+        this.numPages = Number(numPages)
+      })
+      .catch((err) => {
+        this.$errorMessage(err)
+      })
+    getPDFPageSize(this.url, this.viewport)
+      .then((res) => {
+        this.pageSizeList = res
+      })
+      .catch((err) => {
+        this.$errorMessage(err)
+      })
   },
   methods: {
     onScaleChange(e) {
@@ -173,10 +181,6 @@ export default {
         })
     },
     onDownloadClick() {
-      const reg = /^(https|http|ftp|rtsp|mms)?:\/\//
-      if (reg.test(this.url)) {
-        this.$errorMessage('暂不支持跨域资源')
-      }
       FileSaver.saveAs(`/api/download?filePath=${this.url}`)
     },
     onToggleSecondaryToolbar() {

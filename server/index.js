@@ -4,6 +4,7 @@ const serve = require('koa-static')
 const path = require('path')
 const fs = require('fs')
 const url = require('url')
+const axios = require('axios')
 
 const app = new Koa()
 const {
@@ -83,6 +84,7 @@ router.get('/getPDFPageSize', async (ctx) => {
 
 router.get('/download', async (ctx) => {
   if (ctx.query.filePath) {
+    // generate the file name
     const reURI = /^(?:(?:[^:]+:)?\/\/[^/]+)?([^?#]*)(\?[^#]*)?(#.*)?$/
     const reFilename = /[^/?#=]+\.pdf\b(?!.*\.pdf\b)/i
     const splitURI = reURI.exec(ctx.query.filePath)
@@ -93,22 +95,34 @@ router.get('/download', async (ctx) => {
     const fileName = suggestedFilename[0]
     let filePath
     if (url.parse(ctx.query.filePath).protocol === null) {
+      // get pdf file from local storage
       filePath = path.join(__dirname, '/static', ctx.query.filePath)
+      try {
+        await fs.promises.stat(filePath)
+      } catch (error) {
+        ctx.body = { status: 404, data: {}, msg: '文件不存在' }
+      }
+      ctx.set({
+        'Content-Disposition': `attachment; filename=${fileName}`,
+        'content-type': 'application/octet-stream',
+      })
+      ctx.body = fs.createReadStream(filePath)
     } else {
+      // get pdf from Internet
       filePath = ctx.query.filePath
-      ctx.body = { status: 404, data: {}, msg: '暂只支持本地文件' }
+      try {
+        const { data } = await axios.get(filePath, {
+          responseType: 'arraybuffer',
+        })
+        ctx.set({
+          'Content-Disposition': `attachment; filename=${fileName}`,
+          'content-type': 'application/octet-stream',
+        })
+        ctx.body = data
+      } catch (error) {
+        ctx.body = { status: 404, data: {}, msg: '文件不存在' }
+      }
     }
-    ctx.set({
-      'Content-Disposition': `attachment; filename=${fileName}`,
-      'content-type': 'application/octet-stream',
-    })
-    try {
-      await fs.promises.stat(filePath)
-    } catch (error) {
-      ctx.body = { status: 404, data: {}, msg: '文件不存在' }
-    }
-
-    ctx.body = fs.createReadStream(filePath)
   } else {
     ctx.body = { status: 417, data: {}, msg: '请求参数错误' }
   }
