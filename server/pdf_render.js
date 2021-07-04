@@ -65,6 +65,9 @@ async function renderPDFTextContent(file, pageNum = 1, vp = 1.5) {
     loadingTask.promise
       .then((doc) => {
         const { numPages } = doc
+        if (Number.isNaN(pageNum)) {
+          reject(new Error('输入页面错误'))
+        }
         if (pageNum > numPages || pageNum < 1) {
           reject(new Error('输入页面错误'))
         }

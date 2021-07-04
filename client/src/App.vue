@@ -75,7 +75,7 @@ export default {
     return {
       numPages: 0,
       viewport: 1,
-      url: 'http://www.cpic.com.cn/pdfjs/web/compressed.tracemonkey-pldi-09.pdf',
+      url: 'b85n.pdf',
       curPage: 1,
       metaData: {},
       isSecondaryToolbarHidden: true,
@@ -101,13 +101,13 @@ export default {
         const { numPages } = res
         this.metaData = res
         this.numPages = Number(numPages)
-      })
-      .catch((err) => {
-        this.$errorMessage(err)
-      })
-    getPDFPageSize(this.url, this.viewport)
-      .then((res) => {
-        this.pageSizeList = res
+        getPDFPageSize(this.url, this.viewport)
+          .then((result) => {
+            this.pageSizeList = result
+          })
+          .catch((err) => {
+            this.$errorMessage(err)
+          })
       })
       .catch((err) => {
         this.$errorMessage(err)

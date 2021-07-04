@@ -81,6 +81,8 @@
     "koa-router": "^10.0.0",
     "koa-static": "^5.0.0",
     "lodash.range": "^3.2.0",
+    "mongodb": "^3.6.9",
+    "mongoose": "^5.13.1",
     "pdfjs-dist": "^2.7.570"
   },
   "release-it": {
