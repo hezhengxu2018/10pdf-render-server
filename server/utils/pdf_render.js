@@ -4,7 +4,7 @@ const path = require('path')
 const url = require('url')
 const range = require('lodash.range')
 const { createCanvas } = require('canvas')
-const { getPageSizeInches, parsePageSize } = require('./utils')
+const { getPageSizeInches, parsePageSize } = require('./index')
 
 function getFilePath(file) {
   if (url.parse(file).protocol !== null) {

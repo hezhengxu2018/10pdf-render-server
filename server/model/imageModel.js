@@ -9,6 +9,17 @@ const ImageSchema = mongoose.Schema({
 })
 const Image = mongoose.model('Image', ImageSchema)
 
+class ImageModel {
+  static async get(ctx) {
+    const result = await Image.findOne({ url: ctx.reqPDFUrl })
+    return result
+  }
+
+  static async set(obj) {
+    new Image(obj).save()
+  }
+}
+
 module.exports = {
-  Image,
+  ImageModel,
 }

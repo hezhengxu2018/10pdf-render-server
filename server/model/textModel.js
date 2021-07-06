@@ -9,6 +9,18 @@ const TextSchema = mongoose.Schema({
 })
 const Text = mongoose.model('Text', TextSchema)
 
+class TextModel {
+  static async get(ctx) {
+    const result = await Text.findOne({ url: ctx.reqPDFUrl })
+    return result
+  }
+
+  static async set(obj) {
+    new Text(obj).save()
+  }
+}
+
 module.exports = {
   Text,
+  TextModel,
 }

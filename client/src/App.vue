@@ -57,7 +57,7 @@ import {
   OpenPDF,
   Sidebar,
 } from './components/index'
-import { getPDFMetadata, getPDFPageSize } from './api/index'
+import { getPDFMetadata, getPageSize } from './api/index'
 import eventsList from './eventsList'
 import GrabToPan from './utils/grab_to_pan'
 
@@ -101,7 +101,7 @@ export default {
         const { numPages } = res
         this.metaData = res
         this.numPages = Number(numPages)
-        getPDFPageSize(this.url, this.viewport)
+        getPageSize(this.url, this.viewport)
           .then((result) => {
             this.pageSizeList = result
           })
@@ -142,7 +142,7 @@ export default {
         this.viewport = Number(e)
       }
       this.toggle = false
-      getPDFPageSize(this.url, this.viewport).then((res) => {
+      getPageSize(this.url, this.viewport).then((res) => {
         this.pageSizeList = res
         this.toggle = true
         this.$nextTick().then(() => {
@@ -161,7 +161,7 @@ export default {
       this.curPage = value
     },
     onURLChange(value) {
-      getPDFPageSize(value, this.viewport)
+      getPageSize(value, this.viewport)
         .then((res) => {
           // if pdf file is exists, to set numPages to zero make sure thumbnails rerender
           this.numPages = 0

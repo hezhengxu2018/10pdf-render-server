@@ -5,11 +5,21 @@ const PagesizeSchema = mongoose.Schema({
     type: String,
     index: true,
   },
-  file_hash: String,
   result: String,
 })
 const Pagesize = mongoose.model('Pagesize', PagesizeSchema)
 
+class PagesizeModel {
+  static async get(ctx) {
+    const result = await Pagesize.findOne({ url: ctx.reqPDFUrl })
+    return result
+  }
+
+  static async set(obj) {
+    new Pagesize(obj).save()
+  }
+}
+
 module.exports = {
-  Pagesize,
+  PagesizeModel,
 }

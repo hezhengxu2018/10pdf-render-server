@@ -33,9 +33,9 @@ export function getPDFMetadata(filePath, viewport) {
   })
 }
 
-export function getPDFPageSize(filePath, viewport) {
+export function getPageSize(filePath, viewport) {
   return request({
-    url: '/getPDFPageSize',
+    url: '/getPageSize',
     method: 'get',
     params: {
       filePath,

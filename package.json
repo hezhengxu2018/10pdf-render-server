@@ -78,10 +78,12 @@
     "axios": "^0.21.1",
     "canvas": "^2.7.0",
     "koa": "^2.13.1",
+    "koa-helmet": "^6.1.0",
+    "koa-json-error": "^3.1.2",
+    "koa-logger": "^3.2.1",
     "koa-router": "^10.0.0",
     "koa-static": "^5.0.0",
     "lodash.range": "^3.2.0",
-    "mongodb": "^3.6.9",
     "mongoose": "^5.13.1",
     "pdfjs-dist": "^2.7.570"
   },

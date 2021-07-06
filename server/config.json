@@ -1,4 +1,5 @@
 {
+  "databaseType": false,
   "servername": "127.0.0.1",
   "DATABASE": "10pdf",
   "port": 27017,
