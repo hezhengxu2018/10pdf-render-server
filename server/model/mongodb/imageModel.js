@@ -20,6 +20,4 @@ class ImageModel {
   }
 }
 
-module.exports = {
-  ImageModel,
-}
+module.exports = ImageModel

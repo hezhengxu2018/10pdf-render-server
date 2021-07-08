@@ -85,7 +85,9 @@
     "koa-static": "^5.0.0",
     "lodash.range": "^3.2.0",
     "mongoose": "^5.13.1",
-    "pdfjs-dist": "^2.7.570"
+    "pdfjs-dist": "^2.7.570",
+    "sequelize": "^6.6.5",
+    "sqlite3": "^5.0.2"
   },
   "release-it": {
     "github": {

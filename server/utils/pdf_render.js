@@ -10,7 +10,7 @@ function getFilePath(file) {
   if (url.parse(file).protocol !== null) {
     return Promise.resolve(file)
   }
-  const filePath = path.join(__dirname, '/static', file)
+  const filePath = path.join(__dirname, '../static', file)
   return fs
     .stat(filePath)
     .then(() => {

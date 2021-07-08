@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const config = require('../config.json')
+const config = require('../../config.json')
 
 mongoose.Promise = global.Promise
 mongoose.set('useNewUrlParser', true)

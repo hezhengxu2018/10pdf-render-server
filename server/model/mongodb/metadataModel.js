@@ -6,7 +6,7 @@ const MetadataSchema = mongoose.Schema({
     index: true,
   },
   file_hash: String,
-  result: Object,
+  result: String,
 })
 const Metadata = mongoose.model('Metadata', MetadataSchema)
 
@@ -21,6 +21,4 @@ class MetadataModel {
   }
 }
 
-module.exports = {
-  MetadataModel,
-}
+module.exports = MetadataModel

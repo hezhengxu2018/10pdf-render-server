@@ -20,6 +20,4 @@ class PagesizeModel {
   }
 }
 
-module.exports = {
-  PagesizeModel,
-}
+module.exports = PagesizeModel

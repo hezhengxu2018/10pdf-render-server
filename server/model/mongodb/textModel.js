@@ -20,7 +20,4 @@ class TextModel {
   }
 }
 
-module.exports = {
-  Text,
-  TextModel,
-}
+module.exports = TextModel
