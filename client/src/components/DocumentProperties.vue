@@ -11,7 +11,7 @@
         <span data-l10n-id="document_properties_file_size">文件大小:</span>
         <p id="fileSizeField">
           {{ fileSizeFormatter(metaData.contentLength) }} ({{
-            metaData.contentLength.toLocaleString()
+            metaData.contentLength && metaData.contentLength.toLocaleString()
           }}
           字节)
         </p>
@@ -116,7 +116,6 @@ export default {
   },
   methods: {
     dateFormatter(date) {
-      console.log(date)
       if (this.metaData.info) {
         return `${PDFDateString.toDateObject(
           date

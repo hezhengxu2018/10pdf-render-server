@@ -1,34 +1,59 @@
+const md5 = require('md5')
+const fs = require('fs/promises')
+const axios = require('axios')
+const path = require('path')
 const { getPDFMetadata } = require('../utils/pdf_render')
-const { databaseType } = require('../config.json')
-const MetadataModelMongo = require('../model/mongodb/metadataModel')
-const MetadataModelSqlite = require('../model/sqlite/metaDataModel')
+const MetadataModel = require('../model/metadataModel')
 
-const useMongo = databaseType === 'mongodb'
 const getMetadata = async (ctx) => {
-  let dbres
-  if (useMongo) {
-    dbres = await MetadataModelMongo.get(ctx)
-  } else {
-    dbres = await MetadataModelSqlite.get(ctx)
-  }
+  const dbres = await MetadataModel.get(ctx)
   if (dbres === null) {
     try {
-      const data = await getPDFMetadata(ctx.filePath)
-      if (useMongo) {
-        MetadataModelMongo.set({
-          url: ctx.reqPDFUrl,
-          file_hash: '',
-          result: JSON.stringify(data),
+      let PDFFileData
+      let pdfmd5
+      if (ctx.filePath.indexOf('/') > 0) {
+        // remote resource
+        const httpRes = await axios.get(ctx.filePath, {
+          responseType: 'arraybuffer',
         })
+        PDFFileData = httpRes.data
+        pdfmd5 = md5(PDFFileData)
+        const tempPDFPath = path.resolve(
+          __dirname,
+          `../static/pdf_cache/${pdfmd5}.pdf`
+        )
+        try {
+          await fs.stat(tempPDFPath)
+        } catch (error) {
+          if (error.errno === -4058) {
+            fs.writeFile(tempPDFPath, PDFFileData)
+          } else {
+            ctx.throw(400, '读取文件失败')
+          }
+        }
       } else {
-        MetadataModelSqlite.set({
-          url: ctx.reqPDFUrl,
-          file_hash: '',
-          result: JSON.stringify(data),
-        })
+        // local resource
+        const localPDFFile = path.resolve(
+          __dirname,
+          `../static/pdf_cache/${ctx.filePath}`
+        )
+        try {
+          await fs.stat(localPDFFile)
+          PDFFileData = await fs.readFile(localPDFFile)
+          pdfmd5 = path.basename(ctx.filePath, '.pdf')
+        } catch (error) {
+          ctx.throw(400, '读取文件失败')
+        }
       }
 
-      ctx.body = { status: 200, data, msg: '' }
+      const returnData = await getPDFMetadata(PDFFileData)
+      ctx.body = { status: 200, data: returnData, msg: '' }
+
+      MetadataModel.set({
+        url: ctx.filePath,
+        fileHash: pdfmd5,
+        result: JSON.stringify(returnData),
+      })
     } catch (error) {
       ctx.body = { status: 404, data: {}, msg: '获取文件失败' }
     }

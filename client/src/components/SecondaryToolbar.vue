@@ -13,17 +13,9 @@
         class="secondaryToolbarButton openFile visibleLargeView"
         title="打开文件"
         tabindex="52"
+        @click="toggleOpenPDF"
       >
         <span>打开</span>
-      </button>
-
-      <button
-        id="secondaryPrint"
-        class="secondaryToolbarButton print visibleMediumView"
-        title="打印"
-        tabindex="53"
-      >
-        <span>打印</span>
       </button>
 
       <button
@@ -31,6 +23,7 @@
         class="secondaryToolbarButton download visibleMediumView"
         title="下载"
         tabindex="54"
+        @click="onDownloadClick"
       >
         <span>下载</span>
       </button>
@@ -129,6 +122,12 @@ export default {
         this.$emit('toggleHandTool')
         this.$emit('toggleSecondaryToolbar')
       }
+    },
+    toggleOpenPDF() {
+      this.$emit('toggleOpenPDF')
+    },
+    onDownloadClick() {
+      this.$emit('download')
     },
   },
 }

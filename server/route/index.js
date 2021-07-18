@@ -9,16 +9,24 @@ const {
   validateFilePath,
   validateViewport,
   validatePageNum,
+  checkFileExists,
 } = require('../middleware')
 
 const router = new Router({ prefix: '/api' })
 
-router.get('/getMetadata', validateFilePath, genReqPDFUrl, getMetadata)
+router.get(
+  '/getMetadata',
+  validateFilePath,
+  genReqPDFUrl,
+  // checkFileExists,
+  getMetadata
+)
 router.get(
   '/getPageSize',
   validateFilePath,
   validateViewport,
   genReqPDFUrl,
+  checkFileExists,
   getPagesize
 )
 router.get(
@@ -27,6 +35,7 @@ router.get(
   validateViewport,
   validatePageNum,
   genReqPDFUrl,
+  checkFileExists,
   renderPage
 )
 router.get(
@@ -35,6 +44,7 @@ router.get(
   validateViewport,
   validatePageNum,
   genReqPDFUrl,
+  checkFileExists,
   renderText
 )
 router.get('/download', validateFilePath, downloadFile)

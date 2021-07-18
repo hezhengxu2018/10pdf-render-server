@@ -8,7 +8,7 @@ const MetadataSchema = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    file_hash: {
+    fileHash: {
       type: DataTypes.STRING,
     },
     result: {

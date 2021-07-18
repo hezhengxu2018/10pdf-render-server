@@ -33,6 +33,8 @@
       @toggleSecondaryToolbar="onToggleSecondaryToolbar"
       @toggleDocumentProperties="onToggleDocumentProperties"
       @toggleHandTool="onToggleHandTool"
+      @toggleOpenPDF="onToggleOpenPDF"
+      @download="onDownloadClick"
     />
     <ViewContainer
       :numPages="numPages"
@@ -161,21 +163,22 @@ export default {
       this.curPage = value
     },
     onURLChange(value) {
-      getPageSize(value, this.viewport)
-        .then((res) => {
-          // if pdf file is exists, to set numPages to zero make sure thumbnails rerender
-          this.numPages = 0
-          this.pageSizeList = res
-          // change the url only when pdf file exists
-          this.url = value
-          getPDFMetadata(this.url, this.viewport).then((result) => {
-            const { numPages } = result
-            this.metaData = result
-            this.numPages = Number(numPages)
+      getPDFMetadata(value, this.viewport)
+        .then((result) => {
+          const { numPages } = result
+          this.metaData = result
+          this.numPages = Number(numPages)
+          getPageSize(value, this.viewport).then((res) => {
+            // if pdf file is exists, to set numPages to zero make sure thumbnails rerender
+            this.numPages = 0
+            this.pageSizeList = res
+            // change the url only when pdf file exists
+            this.url = value
+            this.onToggleOpenPDF()
+            this.onScaleChange()
           })
-          this.onToggleOpenPDF()
-          this.onScaleChange()
         })
+
         .catch(() => {
           this.$errorMessage('资源加载失败')
         })

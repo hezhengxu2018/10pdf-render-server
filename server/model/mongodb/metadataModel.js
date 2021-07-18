@@ -5,7 +5,7 @@ const MetadataSchema = mongoose.Schema({
     type: String,
     index: true,
   },
-  file_hash: String,
+  fileHash: String,
   result: String,
 })
 const Metadata = mongoose.model('Metadata', MetadataSchema)
