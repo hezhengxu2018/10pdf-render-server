@@ -1,6 +1,6 @@
 {
   "name": "10pdf-render-server",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "a pdf render server",
   "main": "index.js",
   "scripts": {
