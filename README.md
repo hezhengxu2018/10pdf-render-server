@@ -16,8 +16,21 @@ In most cases, render pdf by server is meanless, only when:
 npm install --production
 npm run start
 ```
+you can put the pdf file into server/static/pdf_cache directory or use the Internet resource directly, 10pdf can cache remote file into this directory
 
+### config json
+10pdf can use database to cache the render result, you can set config.json (server/config.json) to use mongodb as default database.
+
+| Props        | Description                                      | Type   |
+| ------------ | ------------------------------------------------ | ------ |
+| databaseType | "sqlite"/"mongodb" sqlite is the default databse | String |
+| servername   | mongodb host address                             | String |
+| DATABASE     | mongodb database name                            | String |
+| port         | mongodb port                                     | Number |
+| user         | mongodb auth user                                | String |
+| pass         | mongodb password                                 | String |
+| authSource   | authSource of mongodb                            | String |
 ## Acknowledgement
 
 [pdf.js](https://github.com/mozilla/pdf.js)
-not only the render engine, but also HTML structure and CSS. 
+not only offer the render engine, but also HTML structure and CSS. 

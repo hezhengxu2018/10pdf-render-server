@@ -21,7 +21,20 @@
 npm install --production
 npm run start
 ```
-如果想添加可预览的文档，请将pdf文件拷贝至server/static/。由于目前的文档渲染是无状态且没有做缓存，因此请求网络中的pdf会大幅降低渲染性能。
+如果想添加可预览的文档，请将pdf文件拷贝至server/static/pdf_cache。当然也可以直接请求网络资源，10pdf会缓存远程资源至该文件夹。
+
+### config json
+10pdf 会使用数据库对已经渲染过的资源进行缓存，默认使用sqllite对已经渲染的资源进行缓存，可以配置 config.json (server/config.json) 来使用mongodb作为默认的数据库。
+
+| Props        | Description                              | Type   |
+| ------------ | ---------------------------------------- | ------ |
+| databaseType | "sqlite"/"mongodb" sqlite 是默认的数据库 | String |
+| servername   | mongodb 主机地址                         | String |
+| DATABASE     | mongodb 使用的数据库名称                 | String |
+| port         | mongodb 端口                             | Number |
+| user         | mongodb 需要认证的用户名                 | String |
+| pass         | mongodb 密码                             | String |
+| authSource   | mongodb 的 authSource                    | String |
 
 ## 感谢
 
