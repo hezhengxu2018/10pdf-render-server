@@ -163,6 +163,7 @@ export default {
       this.curPage = value
     },
     onURLChange(value) {
+      this.numPages = 0
       getPDFMetadata(value, this.viewport)
         .then((result) => {
           const { numPages } = result
@@ -170,7 +171,6 @@ export default {
           this.numPages = Number(numPages)
           getPageSize(value, this.viewport).then((res) => {
             // if pdf file is exists, to set numPages to zero make sure thumbnails rerender
-            this.numPages = 0
             this.pageSizeList = res
             // change the url only when pdf file exists
             this.url = value

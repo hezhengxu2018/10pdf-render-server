@@ -48,7 +48,7 @@ const getMetadata = async (ctx) => {
 
       const returnData = await getPDFMetadata(PDFFileData)
       ctx.body = { status: 200, data: returnData, msg: '' }
-
+      returnData.contentLength = PDFFileData.length
       MetadataModel.set({
         url: ctx.filePath,
         fileHash: pdfmd5,
