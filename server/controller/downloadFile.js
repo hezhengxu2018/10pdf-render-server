@@ -10,7 +10,7 @@ const downloadFile = async (ctx) => {
   let filePath
   if (url.parse(ctx.query.filePath).protocol === null) {
     // get pdf file from local storage
-    filePath = path.join(__dirname, '../static', ctx.query.filePath)
+    filePath = path.join(__dirname, '../static/pdf_cache', ctx.query.filePath)
     try {
       await fs.promises.stat(filePath)
     } catch (error) {
